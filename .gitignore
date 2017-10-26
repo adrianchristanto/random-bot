@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/RandomBot/Image
+/RandomBot/bin
+/RandomBot/obj/Debug/netcoreapp2.0
+/RandomBot/obj/Release/netcoreapp2.0
+/RandomBot/obj
+/RandomBot/Properties/PublishProfiles
+/.vs/RandomBot/v15
