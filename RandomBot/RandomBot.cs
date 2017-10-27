@@ -34,7 +34,7 @@ namespace RandomBot
                 .AddField("$roll or $r", "Mini gamble. Do it!")
                 .AddField("$dab", "Because I hate myself")
                 .AddField("$yes or $no", "Your choice")
-                .AddField("$delete or $d", "Delete message (max 100)")
+                .AddField("$delete or $d", "Delete message (max 99)")
                 .AddField("$search or $s", "Search videos from youtube (only 5 top videos for now)")
                 .AddField("$dev", "This shows my development status")
                 .AddField("$who or $what", "Who am I? What is my purpose?")
@@ -282,9 +282,11 @@ namespace RandomBot
         [Alias("d")]
         public async Task DevelopmentStatus()
         {
+            var kappa = await Context.Channel.GetUserAsync(318035086375387136);
             await ReplyAsync(@"
-Me is moar stable now <:thumbsup:370864237616168960>
-But moar error is to be expected <:hifumiSpook:370854277767364608>
+You could say I'm build version 0.0.2, don't ask why only " + kappa.Mention + @" knows <:pepesmug:370857798415941633>
+I'm more stable now <:thumbsup:370864237616168960>
+But more error is to be expected <:hifumiSpook:370854277767364608>
 ");
         }
 
