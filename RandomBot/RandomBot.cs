@@ -24,24 +24,24 @@ namespace RandomBot
         public async Task Help()
         {
             var messagesToDelete = await Context.Channel.GetMessageAsync(Context.Message.Id);
-            await ReplyAsync(@"```css
-Lazy list:
-$hello or $hi           - Say hi to someone
-$markdown or $m         - Edit your message
-$nick or $n             - Change your diplay name
-$northstar or $kenshiro - Omae wa mou shindeiru
-$uralreadydead          - NANI!?
-$fight or $f            - Be a man! Fight someone!
-$roll or $r             - Mini gamble. Do it!
-$dab                    - Because I hate myself
-$yes or $no             - Your choice
-$delete or $d           - Delete message (max 100)
-$search or $s           - Search videos from youtube
-$dev                    - This shows my development status
-$who or $what           - Who am I? What is my purpose?
-$rigged                 - Is it rigged?
-Put any other command from the list above and I'll get mad
-```");
+            var builder = new EmbedBuilder()
+                .WithTitle("RandomBot Command List:")
+                .AddField("$hello or $hi", "Say hi to someone")
+                .AddField("$markdown or $m", "Edit your message")
+                .AddField("$northstar or $kenshiro", "Omae wa mou shindeiru")
+                .AddField("$uralreadydead", "NANI!?")
+                .AddField("$fight or $f", "Be a man! Fight someone!")
+                .AddField("$roll or $r", "Mini gamble. Do it!")
+                .AddField("$dab", "Because I hate myself")
+                .AddField("$yes or $no", "Your choice")
+                .AddField("$delete or $d", "Delete message (max 100)")
+                .AddField("$search or $s", "Search videos from youtube (only 5 top videos for now)")
+                .AddField("$dev", "This shows my development status")
+                .AddField("$who or $what", "Who am I? What is my purpose?")
+                .AddField("$rigged", "Is it rigged?")
+                .WithColor(Discord.Color.DarkRed);
+
+            await ReplyAsync("", false, builder);
             await messagesToDelete.DeleteAsync();
         }
 
@@ -60,7 +60,7 @@ Put any other command from the list above and I'll get mad
             var messagesToDelete = await Context.Channel.GetMessageAsync(Context.Message.Id);
             if (Context.User.Id == user.Id)
             {
-                await ReplyAsync("Hello " + Context.Message.Author.Mention + " <:AkarinWave:370855004921135104>");
+                await this.Hello();
             }
             else
             {
@@ -74,19 +74,19 @@ Put any other command from the list above and I'll get mad
         [Alias("m")]
         public async Task Markdown()
         {
-            await ReplyAsync(@"```css
-Type List:
-italics or i                    - *italics*
-bold or b                       - **bold**
-bold italics or bi              - ***bold italics***
-underline or u                  - __underline__
-underline italics or ui         - __*underline italics*__
-underline bold or ub            - __**underline bold**__
-underline bold italics or ubi   - __***underline bold italics***__
-strikethrough or s              - ~~strikethrough~~
-codeblocks or c                 - `code blocks`
-Example: $m bi Hahahaha
-```");
+            var builder = new EmbedBuilder()
+                .WithAuthor("Type List:")
+                .AddField("italics or i", "*italics*")
+                .AddField("bold or b", "**bold**")
+                .AddField("bolditalics or bi", "***bold italics***")
+                .AddField("underline or u", "__underline__")
+                .AddField("underlineitalics or ui", "__*underline italics*__")
+                .AddField("underlinebold or ub", "__**underline bold**__")
+                .AddField("underlinebolditalics or ubi", "__***underline bold italics***__")
+                .AddField("strikethrough or s", "~~strikethrough~~")
+                .AddField("Example:", "$m i Huehuehue")
+                .WithColor(Discord.Color.DarkRed);
+            await ReplyAsync("", false, builder);
         }
         [Command("markdown", RunMode = RunMode.Async)]
         [Summary("Change nickname")]
