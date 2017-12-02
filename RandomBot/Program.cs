@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Discord;
+using Discord.Addons.Interactive;
+using Discord.Commands;
+using Discord.WebSocket;
+using RandomBot.Services;
+using RandomBot.Entities;
 
 namespace RandomBot
 {
@@ -23,7 +27,7 @@ namespace RandomBot
         {
             commands = new CommandService();
             client = new DiscordSocketClient();
-            services = new ServiceCollection().BuildServiceProvider();
+            services = this.ConfigureServices();
 
             await InstallCommands();
 
@@ -70,12 +74,11 @@ namespace RandomBot
             {
                 return;
             }
-            var context = new CommandContext(client, msg);
+            var context = new SocketCommandContext(client, msg);
             var result = await commands.ExecuteAsync(context, argPos, services);
             if (result.IsSuccess == false)
             {
                 var errorReason = result.ErrorReason;
-                //await context.Channel.SendMessageAsync(errorReason);
                 await context.Channel.SendMessageAsync("Apa sih <:confusednigga:370923106660909059>");
             }
             return;
@@ -85,6 +88,24 @@ namespace RandomBot
         {
             Console.WriteLine(msg.ToString());
             return Task.CompletedTask;
+        }
+
+        private IServiceProvider ConfigureServices()
+        {
+            return new ServiceCollection()
+                .AddSingleton(client)
+                .AddTransient<DeleteService>()
+                .AddTransient<FightService>()
+                .AddTransient<HelpService>()
+                .AddTransient<ImageManipulationService>()
+                .AddTransient<InteractiveService>()
+                .AddTransient<ShipfuService>()
+                .AddTransient<YoutubeSearchService>()
+                .AddDbContext<RandomBotDbContext>(options =>
+                {
+                    options.UseSqlServer(@"Data Source=DESKTOP-5HNRP1B\SQLEXPRESS;Initial Catalog=RandomBot;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                })
+                .BuildServiceProvider();
         }
     }
 }
