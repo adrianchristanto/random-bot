@@ -15,6 +15,14 @@ namespace RandomBot.Entities
 
         }
 
+        public virtual DbSet<GachaHistory> GachaHistory { get; set; }
+
+        public virtual DbSet<GachaHistoryDetail> GachaHistoryDetail { get; set; }
+
+        public virtual DbSet<Reminder> Reminder { get; set; }
+
+        public virtual DbSet<ReminderRecipient> ReminderRecipient { get; set; }
+
         public virtual DbSet<Shipfu> Shipfu { get; set; }
 
         public virtual DbSet<ShipfuRarity> ShipfuRarity { get; set; }

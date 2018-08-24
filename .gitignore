@@ -9,3 +9,6 @@
 /RandomBot/obj
 /RandomBot/Properties/PublishProfiles
 /.vs/RandomBot/v15
+/RandomBot/appsettings.json
+/.vs/config/applicationhost.config
+/.vs/RandomBot/DesignTimeBuild

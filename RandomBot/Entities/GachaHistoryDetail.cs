@@ -8,17 +8,15 @@ using System.Threading.Tasks;
 
 namespace RandomBot.Entities
 {
-    public class Shipfu
+    public class GachaHistoryDetail
     {
-        public bool IsAvailable { get; set; }
-
         [Key]
+        public int GachaHistoryDetailId { get; set; }
+
+        public int GetCount { get; set; }
+
         public int ShipfuId { get; set; }
 
-        public string ShipfuImgUrl { get; set; }
-
-        public string ShipfuName { get; set; }
-
-        public int ShipfuRarityId { get; set; }
+        public string UserId { get; set; }
     }
 }
