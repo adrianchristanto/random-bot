@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RandomBot.Models
+﻿namespace RandomBot.Models
 {
     public class ShipfuRarityModel
     {
