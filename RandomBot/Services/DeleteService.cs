@@ -14,8 +14,9 @@ namespace RandomBot.Services
                 await Context.Channel.SendMessageAsync("DENIED <:hyperGachi:370860482451734528>");
             } else if (num > 0 && num < 100)
             {
-                var messagesToDelete = await Context.Channel.GetMessagesAsync(num + 1).Flatten();
-                await Context.Channel.DeleteMessagesAsync(messagesToDelete);
+                var messagesToDelete = await Context.Channel.GetMessagesAsync(num + 1).FlattenAsync();
+                var channel = Context.Guild.GetTextChannel(Context.Channel.Id);
+                await channel.DeleteMessagesAsync(messagesToDelete);
 
                 var messageReply = await Context.Channel.SendMessageAsync($"{ Context.User.Mention } deleted { num } message(s). This message will be deleted in 3 seconds");
                 await Task.Delay(1000);

@@ -14,7 +14,7 @@ namespace RandomBot.Modules.HelpModule
             var messagesToDelete = await Context.Channel.GetMessageAsync(Context.Message.Id);
             await messagesToDelete.DeleteAsync();
 
-            var builder = new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithAuthor("RandomBot Command List:")
                 .AddField("Normal Commands", @"
 $aware
@@ -61,7 +61,7 @@ $rigged
 ")
                 .WithColor(Discord.Color.DarkRed);
 
-            await Context.Channel.SendMessageAsync("", false, builder);
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
     }
 }

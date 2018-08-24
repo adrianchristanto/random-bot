@@ -38,8 +38,8 @@ namespace RandomBot.Services
             if (rarityId == 4) additionalMessage = "Congratulations, ";
             if (rarityId == 3) additionalMessage = "Wow, ";
             if (rarityId == 2) additionalMessage = "Yay, ";
-            var builder = new EmbedBuilder().WithColor(Discord.Color.DarkRed).WithImageUrl(gachaResult.ShipfuImgUrl);
-            await Context.Channel.SendMessageAsync(additionalMessage + Context.User.Mention + " got " + gachaResult.ShipfuName + "!", false, builder);
+            var embed = new EmbedBuilder().WithColor(Discord.Color.DarkRed).WithImageUrl(gachaResult.ShipfuImgUrl);
+            await Context.Channel.SendMessageAsync(additionalMessage + Context.User.Mention + " got " + gachaResult.ShipfuName + "!", embed: embed.Build());
 
             // Record gacha result to database
             this.ReportGacha(Context.User.Id.ToString(), gachaResult);
@@ -50,10 +50,10 @@ namespace RandomBot.Services
         {
             var gachaHistory = await this.DbContext.GachaHistory.Where(Q => Q.UserId == Context.User.Id.ToString()).FirstOrDefaultAsync();
             var completionRate = await this.GetCompletionRate(Context.User.Id.ToString());
-            var builder = new EmbedBuilder().WithColor(Discord.Color.DarkRed);
+            var embed = new EmbedBuilder().WithColor(Discord.Color.DarkRed);
             if (gachaHistory == null)
             {
-                builder.WithDescription(Context.User.Mention + " hasn't pulled any gacha(s)");
+                embed.WithDescription(Context.User.Mention + " hasn't pulled any gacha(s)");
             }
             else
             {
@@ -65,9 +65,9 @@ namespace RandomBot.Services
 {4} R
 {5} N
 {6}% Shipfu Completion Rate";
-                builder.WithDescription(string.Format(stringDetail, Context.User.Mention, entryCount, gachaHistory.SSRCount, gachaHistory.SRCount, gachaHistory.RareCount, gachaHistory.NormalCount, completionRate));
+                embed.WithDescription(string.Format(stringDetail, Context.User.Mention, entryCount, gachaHistory.SSRCount, gachaHistory.SRCount, gachaHistory.RareCount, gachaHistory.NormalCount, completionRate));
             }
-            await Context.Channel.SendMessageAsync("", false, builder);
+            await Context.Channel.SendMessageAsync("", embed: embed.Build());
         }
 
         [Summary("Get gacha completion rate")]

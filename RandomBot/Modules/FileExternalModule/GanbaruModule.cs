@@ -10,10 +10,10 @@ namespace RandomBot.Modules.FileExternalModule
         [Summary("Ganbaru Unicorn")]
         public async Task Ganbaru()
         {
-            var builder = new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Discord.Color.DarkRed)
                 .WithImageUrl("https://i2.wp.com/azurlane.info/wp-content/uploads/2017/11/Eu6JqWN.jpg");
-            await ReplyAsync("", false, builder);
+            await ReplyAsync("", embed: embed.Build());
         }
     }
 }

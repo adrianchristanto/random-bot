@@ -178,7 +178,7 @@ namespace RandomBot.Services
                 }
             }
 
-            await context.Channel.SendMessageAsync("", embed: embed);
+            await context.Channel.SendMessageAsync("", embed: embed.Build());
         }
 
         public async Task ExecuteReminder()
@@ -216,7 +216,7 @@ namespace RandomBot.Services
                     }
 
                     var channel = this.GetSocketTextChannel(ulong.Parse(recipient.GuildId), ulong.Parse(recipient.ChannelId));
-                    var result = await channel.SendMessageAsync("", embed: embed);
+                    var result = await channel.SendMessageAsync("", embed: embed.Build());
                 }
 
                 await this.UpdateReminder(sentReminder);

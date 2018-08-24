@@ -11,7 +11,7 @@ namespace RandomBot.Modules.MarkdownModule
         [Alias("m")]
         public async Task Markdown()
         {
-            var builder = new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithAuthor("Type List:")
                 .AddField("italics or i", "*italics*")
                 .AddField("bold or b", "**bold**")
@@ -23,7 +23,7 @@ namespace RandomBot.Modules.MarkdownModule
                 .AddField("strikethrough or s", "~~strikethrough~~")
                 .AddField("Example:", "$m i Huehuehue")
                 .WithColor(Discord.Color.DarkRed);
-            await ReplyAsync("", false, builder);
+            await ReplyAsync("", embed: embed.Build());
         }
         [Command("markdown", RunMode = RunMode.Async)]
         [Summary("Change nickname")]

@@ -22,7 +22,7 @@ Added remind module, show remind module, and remove remind module")
                 .AddField("Build 0.2.7", @"Improved every image editting module")
                 .AddField("More?", "Details on $changelog")
                 .WithColor(Discord.Color.DarkRed);
-            await ReplyAsync("", false, embed);
+            await ReplyAsync("", embed: embed.Build());
         }
 
         [Command("who", RunMode = RunMode.Async)]
@@ -61,7 +61,7 @@ Call him if you want to give some feedback
                 .WithAuthor("List of feature not yet implemented or in consideration")
                 .AddField("Memes", "Moar memes?")
                 .WithColor(Discord.Color.DarkRed);
-            await ReplyAsync("", false, embed);
+            await ReplyAsync("", embed: embed.Build());
         }
     }
 }

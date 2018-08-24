@@ -28,8 +28,8 @@ namespace RandomBot.Modules.DiscordGifEmojiModule
                 .AddField(":slurpyslurp:", "$slurpyslurp or $slurp")
                 .AddField(":shimakazetablebang:", "$shimakazetablebang or $st")
                 .AddField(":wao:", "$wao")
-                .WithColor(Discord.Color.DarkRed);
-            await ReplyAsync("", embed: embed);
+                .WithColor(Color.DarkRed);
+            await ReplyAsync("", embed: embed.Build());
         }
 
         [Command("2bright", RunMode = RunMode.Async)]
