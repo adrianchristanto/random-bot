@@ -20,7 +20,7 @@ Fix message when no reminder found")
 Added time scheduler that run once every minute
 Added remind module, show remind module, and remove remind module")
                 .AddField("Build 0.2.7", @"Improved every image editting module")
-                .AddField("More?", "Details on $changelog")
+                .AddField("More?", @"Details on https://gitlab.com/adrianch/RandomBot/blob/master/CHANGELOG.md")
                 .WithColor(Discord.Color.DarkRed);
             await ReplyAsync("", false, embed);
         }
@@ -50,7 +50,9 @@ Call him if you want to give some feedback
         [Alias("cl")]
         public async Task ChangeLog()
         {
-            await Context.Channel.SendFileAsync("CHANGELOG.txt", "Why are you looking for this?", true);
+            await Context.Channel.SendMessageAsync(@"
+https://gitlab.com/adrianch/RandomBot/blob/master/CHANGELOG.md 
+Why are you looking for this?", true);
         }
 
         [Command("upcoming", RunMode = RunMode.Async)]
