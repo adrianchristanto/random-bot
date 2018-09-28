@@ -12,7 +12,8 @@ namespace RandomBot.Services
             if (Context.User.Id != guildOwner && Context.User.Id != 318035086375387136)
             {
                 await Context.Channel.SendMessageAsync("DENIED <:hyperGachi:370860482451734528>");
-            } else if (num > 0 && num < 100)
+            }
+            else if (num > 0 && num < 100)
             {
                 var messagesToDelete = await Context.Channel.GetMessagesAsync(num + 1).FlattenAsync();
                 var channel = Context.Guild.GetTextChannel(Context.Channel.Id);
@@ -26,7 +27,8 @@ namespace RandomBot.Services
                     await Task.Delay(1000);
                 }
                 await messageReply.DeleteAsync();
-            } else
+            }
+            else
             {
                 await Context.Channel.SendMessageAsync("???");
             }

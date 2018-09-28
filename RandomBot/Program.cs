@@ -67,13 +67,6 @@ namespace RandomBot
             var guild = user.Guild;
             var channel = guild.TextChannels.FirstOrDefault();
 
-            // If Kappa n frens server
-            if (guild.Id == 370852077225771010) 
-            {
-                var roleId = user.Guild.Roles.FirstOrDefault(Q => Q.Id.ToString() == "370855541897035778");
-                await user.AddRoleAsync(roleId);
-            }
-
             await channel.SendMessageAsync($"Hey { user.Mention }! <:AkarinWave:370855004921135104>");
         }
 
