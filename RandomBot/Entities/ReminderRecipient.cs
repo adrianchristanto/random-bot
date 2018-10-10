@@ -16,7 +16,5 @@ namespace RandomBot.Entities
 
         [Key]
         public int ReminderRecipientId { get; set; }
-
-        public string UserId { get; set; }
     }
 }

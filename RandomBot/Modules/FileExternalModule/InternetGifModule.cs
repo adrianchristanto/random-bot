@@ -44,6 +44,16 @@ namespace RandomBot.Modules.FileExternalModule
             await ReplyAsync("", embed: embed.Build());
         }
 
+        [Command("drool", RunMode = RunMode.Async)]
+        [Summary("Seseren Drool")]
+        public async Task Ganbaru()
+        {
+            var embed = new EmbedBuilder()
+                .WithColor(Discord.Color.DarkRed)
+                .WithImageUrl("https://cdn.discordapp.com/attachments/465884661537570826/499133391451455488/Seseren.gif");
+            await ReplyAsync("", embed: embed.Build());
+        }
+
         [Command("gift", RunMode = RunMode.Async)]
         public async Task Gift()
         {

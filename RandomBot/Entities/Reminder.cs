@@ -21,6 +21,6 @@ namespace RandomBot.Entities
 
         public bool IsDaily { get; set; }
 
-        public bool IsReminded { get; set; }
+        public bool IsActive { get; set; }
     }
 }

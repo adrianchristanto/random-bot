@@ -48,7 +48,7 @@ namespace RandomBot.Services
                             ReminderRecipientId = recipientId,
                             ReminderDateTime = ReminderDate,
                             ReminderMessage = ReminderMessage,
-                            IsReminded = false
+                            IsActive = true
                         };
                         this.DbContext.Reminder.Add(reminder);
                         await this.DbContext.SaveChangesAsync();
@@ -131,7 +131,7 @@ namespace RandomBot.Services
         {
             var reminderId = new Guid(guid);
             var reminder = await this.DbContext.Reminder
-                .Where(Q => Q.ReminderId == reminderId && Q.IsReminded == false)
+                .Where(Q => Q.ReminderId == reminderId && Q.IsActive == true)
                 .FirstOrDefaultAsync();
 
             if (reminder == null)
@@ -156,7 +156,7 @@ namespace RandomBot.Services
                     rr.ChannelId
                 })
                 .AsNoTracking()
-                .Where(Q => Q.GuildId == context.Guild.Id.ToString() && Q.r.IsReminded == false && (Q.ChannelId == context.Channel.Id.ToString() || showAll == true))
+                .Where(Q => Q.GuildId == context.Guild.Id.ToString() && Q.r.IsActive == true && (Q.ChannelId == context.Channel.Id.ToString() || showAll == true))
                 .Select(Q => Q.r)
                 .ToListAsync();
 
@@ -187,7 +187,7 @@ namespace RandomBot.Services
 
             // Get Reminder grouped by ReminderRecipientId
             var remindersByRecipient = await this.DbContext.Reminder
-                .Where(Q => Q.ReminderDateTime <= dateNow && Q.IsReminded == false)
+                .Where(Q => Q.ReminderDateTime <= dateNow && Q.IsActive == true)
                 .GroupBy(Q => Q.ReminderRecipientId)
                 .ToListAsync();
 
@@ -233,7 +233,7 @@ namespace RandomBot.Services
                 }
                 else
                 {
-                    Q.IsReminded = true;
+                    Q.IsActive = false;
                 }
                 return Q;
             })
@@ -246,8 +246,8 @@ namespace RandomBot.Services
         public async Task RemoveReminder(SocketCommandContext context, string guid)
         {
             var reminderId = new Guid(guid);
-            var openReminder = await this.DbContext.Reminder.AsNoTracking()
-                .Where(Q => Q.ReminderId == reminderId && Q.IsReminded == false)
+            var openReminder = await this.DbContext.Reminder
+                .Where(Q => Q.ReminderId == reminderId && Q.IsActive == true)
                 .FirstOrDefaultAsync();
 
             if (openReminder == null)
@@ -256,7 +256,7 @@ namespace RandomBot.Services
             }
             else
             {
-                this.DbContext.Reminder.Remove(openReminder);
+                openReminder.IsActive = false;
                 await this.DbContext.SaveChangesAsync();
 
                 await context.Channel.SendMessageAsync("Reminder removed");
