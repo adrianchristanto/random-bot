@@ -73,7 +73,7 @@ namespace RandomBot
         public async Task InstallCommands()
         {
             Client.MessageReceived += HandleCommand;
-            await Commands.AddModulesAsync(Assembly.GetEntryAssembly());
+            await Commands.AddModulesAsync(Assembly.GetEntryAssembly(), Services);
         }
 
         public async Task HandleCommand(SocketMessage msgParam)
