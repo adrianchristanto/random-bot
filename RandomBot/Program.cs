@@ -55,7 +55,7 @@ namespace RandomBot
             Client.Log += Log;
             Client.UserJoined += UserJoined;
 
-            Timer = new System.Timers.Timer(int.Parse(Configuration.GetSection("ReminderInterval").Value));
+            Timer = new System.Timers.Timer(this.SetInitialInterval(int.Parse(Configuration.GetSection("ReminderInterval").Value)));
             Timer.Elapsed += new System.Timers.ElapsedEventHandler(ElapsedHandlerAsync);
             Timer.Enabled = true;
 
@@ -94,7 +94,7 @@ namespace RandomBot
             var result = await Commands.ExecuteAsync(context, argPos, Services);
             if (result.IsSuccess == false)
             {
-                var emoteExist = Emote.TryParse("<:confusednigga:370923106660909059>", out var emote);
+                var emoteExist = Emote.TryParse("<:veriConfuse:528044464795680787>", out var emote);
                 await context.Channel.SendMessageAsync($"Apa sih { emote }");
             }
         }
@@ -105,10 +105,19 @@ namespace RandomBot
             return Task.CompletedTask;
         }
 
+        private int SetInitialInterval(int interval)
+        {
+            var currentSecond = DateTime.Now.Second * 1000;
+            return 60000 - currentSecond;
+        }
+
         private async void ElapsedHandlerAsync(object source, System.Timers.ElapsedEventArgs e)
         {
             var reminderService = Services.GetService<ReminderService>();
             await reminderService.ExecuteReminder();
+
+            var interval = int.Parse(Configuration.GetSection("ReminderInterval").Value);
+            this.Timer.Interval = this.SetInitialInterval(interval);
         }
 
         private IServiceProvider ConfigureServices()
