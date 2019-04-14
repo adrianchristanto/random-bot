@@ -36,27 +36,20 @@ namespace RandomBot.Services
             }
             else
             {
-                await this.DbContext.Database.CreateExecutionStrategy().Execute(async () =>
+                var recipientId = await this.GetReminderRecipientId(context);
+
+                var reminder = new Reminder
                 {
-                    using (var transaction = await this.DbContext.Database.BeginTransactionAsync())
-                    {
-                        var recipientId = await this.GetReminderRecipientId(context);
+                    ReminderId = new Guid(),
+                    ReminderRecipientId = recipientId,
+                    ReminderDateTime = ReminderDate,
+                    ReminderMessage = ReminderMessage,
+                    IsActive = true
+                };
+                this.DbContext.Reminder.Add(reminder);
+                await this.DbContext.SaveChangesAsync();
 
-                        var reminder = new Reminder
-                        {
-                            ReminderId = new Guid(),
-                            ReminderRecipientId = recipientId,
-                            ReminderDateTime = ReminderDate,
-                            ReminderMessage = ReminderMessage,
-                            IsActive = true
-                        };
-                        this.DbContext.Reminder.Add(reminder);
-                        await this.DbContext.SaveChangesAsync();
-
-                        await context.Channel.SendMessageAsync($@"Ok, I will remind you for '{ ReminderMessage }' at { ReminderDate.ToString("dd/MM/yyyy HH:mm") }. Do apologize if I'm late because I got deactivated...");
-                        transaction.Commit();
-                    }
-                });
+                await context.Channel.SendMessageAsync($@"Ok, I will remind you for '{ ReminderMessage }' at { ReminderDate.ToString("dd/MM/yyyy HH:mm") }. Do apologize if I'm late because I got deactivated...");
             }
         }
 
@@ -119,7 +112,6 @@ namespace RandomBot.Services
                 };
 
                 this.DbContext.ReminderRecipient.Add(newRecipient);
-                await this.DbContext.SaveChangesAsync();
 
                 recipient = newRecipient;
             }
@@ -173,7 +165,7 @@ namespace RandomBot.Services
                 for (var i = 0; i < openReminder.Count; i++)
                 {
                     var reminderTime = openReminder[i].IsDaily == true ? openReminder[i].ReminderDateTime.ToShortTimeString() : openReminder[i].ReminderDateTime.ToString("dd/MM/yyyy HH:mm");
-                    var isDaily = openReminder[i].IsDaily == true ? "(daily)" : "(once)";
+                    var isDaily = openReminder[i].IsDaily == true ? "(daily)" : "";
                     embed.AddField($"{ i + 1 }. { openReminder[i].ReminderId }", $@"{ openReminder[i].ReminderMessage } at { reminderTime } { isDaily }");
                 }
             }
