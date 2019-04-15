@@ -189,30 +189,27 @@ namespace RandomBot.Services
                 .Where(Q => recipientIds.Contains(Q.ReminderRecipientId))
                 .ToListAsync();
 
-            if (remindersByRecipient != null)
+            var sentReminder = new List<Reminder>();
+            foreach (var groupReminders in remindersByRecipient)
             {
-                var sentReminder = new List<Reminder>();
-                foreach (var groupReminders in remindersByRecipient)
+                var recipient = recipients.FirstOrDefault(Q => Q.ReminderRecipientId == groupReminders.Key);
+                var embed = new EmbedBuilder()
+                    .WithAuthor($"Reminder(s) for this channel (Run at { dateNow.ToString("dd/MM/yyyy HH:mm") }):")
+                    .WithColor(Discord.Color.DarkRed);
+
+                var reminders = groupReminders.ToList();
+                for (var i = 0; i < reminders.Count; i++)
                 {
-                    var recipient = recipients.FirstOrDefault(Q => Q.ReminderRecipientId == groupReminders.Key);
-                    var embed = new EmbedBuilder()
-                        .WithAuthor($"Reminder(s) for this channel (Run at { dateNow.ToString("dd/MM/yyyy HH:mm") }):")
-                        .WithColor(Discord.Color.DarkRed);
-
-                    var reminders = groupReminders.ToList();
-                    for (var i = 0; i < reminders.Count; i++)
-                    {
-                        var reminderDate = reminders[i].IsDaily == true ? reminders[i].ReminderDateTime.ToShortTimeString() : reminders[i].ReminderDateTime.ToString("dd/MM/yyyy HH:mm");
-                        embed.AddField($"{ i + 1 }. { reminderDate }", reminders[i].ReminderMessage);
-                        sentReminder.Add(reminders[i]);
-                    }
-
-                    var channel = this.GetSocketTextChannel(ulong.Parse(recipient.GuildId), ulong.Parse(recipient.ChannelId));
-                    var result = await channel.SendMessageAsync("", embed: embed.Build());
+                    var reminderDate = reminders[i].IsDaily == true ? reminders[i].ReminderDateTime.ToShortTimeString() : reminders[i].ReminderDateTime.ToString("dd/MM/yyyy HH:mm");
+                    embed.AddField($"{ i + 1 }. { reminderDate }", reminders[i].ReminderMessage);
+                    sentReminder.Add(reminders[i]);
                 }
 
-                await this.UpdateReminder(sentReminder);
+                var channel = this.GetSocketTextChannel(ulong.Parse(recipient.GuildId), ulong.Parse(recipient.ChannelId));
+                var result = await channel.SendMessageAsync("", embed: embed.Build());
             }
+
+            await this.UpdateReminder(sentReminder);
         }
 
         private async Task UpdateReminder(List<Reminder> reminders)
