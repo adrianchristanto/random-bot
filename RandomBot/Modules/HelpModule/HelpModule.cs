@@ -19,28 +19,21 @@ namespace RandomBot.Modules.HelpModule
                 .AddField("Normal Commands", @"
 $aware
 $hello/$hi @Someone (Someone: User mentioned. Optional.)
-$markdown/$m
 $roll/$r
 $decide @Option1 @Option2
 $delete/$d @Number (Number: Messages to delete. Max 99.)
 $timeconvert/$tc @Number (Number: Add or subtract hours from current time.)")
                 .AddField("Image Commands", @"
-$angery
 $bait
 $bitch/$b @Someone (Someone: User mentioned. Optional.)
 $dab
 $dance
+$dieshouri
 $drool
 $facepalm
 $fight/$f @Person1 @Person2 (Person: User mentioned. Person2: Optional)
 $ganbaru
-$giflist/$gif
-$gocrazy/$gc
-$hahaha
-$hawawa
 $orz
-$northstar/$kenshiro @Someone (Someone: User mentioned. Required.)
-$ree
 $soon
 $yes/$no")
                 .AddField("Reminder Commands", @"

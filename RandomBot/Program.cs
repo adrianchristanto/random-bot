@@ -101,7 +101,15 @@ namespace RandomBot
 
         private Task Log(LogMessage msg)
         {
-            Console.WriteLine(msg.ToString());
+            if (msg.Exception != null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            
             return Task.CompletedTask;
         }
 
@@ -125,13 +133,13 @@ namespace RandomBot
             return new ServiceCollection()
                 .AddSingleton(Client)
                 .AddTransient<DeleteService>()
-                .AddTransient<DiscordGifEmojiService>()
                 .AddTransient<FightService>()
                 .AddTransient<ImageManipulationService>()
                 .AddTransient<InteractiveService>()
                 .AddTransient<ReminderService>()
                 .AddTransient<ShipfuService>()
                 .AddTransient<TimeConvertService>()
+                .AddSingleton<VoiceChannelService>()
                 .AddDbContext<RandomBotDbContext>(options =>
                 {
                     options.UseSqlServer(Configuration.GetConnectionString("RandomBotDb"), strategy =>

@@ -150,6 +150,7 @@ namespace RandomBot.Services
                 .AsNoTracking()
                 .Where(Q => Q.GuildId == context.Guild.Id.ToString() && Q.r.IsActive == true && (Q.ChannelId == context.Channel.Id.ToString() || showAll == true))
                 .Select(Q => Q.r)
+                .OrderBy(Q => Q.ReminderDateTime)
                 .ToListAsync();
 
             var embed = new EmbedBuilder()

@@ -29,14 +29,29 @@ namespace RandomBot.Services
                 await this.ImageManipulation.GetAvatarFromUrl(user2);
                 var finishedStream = this.ImageManipulation.ManipulateImage(halfFinishedStream, user2.AvatarId, 622, 213);
                 
-                var result = rand.Next(1, 101);
                 var message = string.Empty;
-                if (result >= 1 && result <= 40) message = $"{ user1.Mention } win!";
-                if (result >= 41 && result <= 60) message = "It's a draw!";
-                if (result >= 61 && result <= 100) message = $"{ user2.Mention } win!";
+
+                var winner = string.Empty;
+                if (user1.Id == 318035086375387136 || user2.Id == 318035086375387136)
+                {
+                    winner = "<@!318035086375387136>";
+                }
+
+                if (string.IsNullOrEmpty(winner) == false) message = $"{ winner } win!";
+                else message = this.GetWinner(user1.Mention, user2.Mention);
 
                 await Context.Channel.SendFileAsync(finishedStream, "Fight.jpg", message);
             }
+        }
+
+        private string GetWinner(string user1, string user2)
+        {
+            var result = rand.Next(1, 101);
+            if (result >= 1 && result <= 40) return $"{ user1 } win!";
+            if (result >= 41 && result <= 60) return "It's a draw!";
+            if (result >= 61 && result <= 100) return $"{ user2 } win!";
+
+            return string.Empty;
         }
     }
 }

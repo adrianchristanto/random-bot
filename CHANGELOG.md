@@ -1,3 +1,10 @@
+## 0.3.2
+
+- Removed any gif related command (use the one discord provide instead)
+- Removed $markdown command
+- Small changes in Reminder command
+- A few command rigged
+
 ## 0.3.1
 
 - Added showallremind module

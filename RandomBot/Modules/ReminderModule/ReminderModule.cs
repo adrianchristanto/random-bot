@@ -1,6 +1,5 @@
 ﻿using Discord.Commands;
 using RandomBot.Services;
-using System;
 using System.Threading.Tasks;
 
 namespace RandomBot.Modules.ReminderModule
