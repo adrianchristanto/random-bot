@@ -10,10 +10,8 @@ namespace RandomBot.Services
         public FightService(ImageManipulationService imageManipulation)
         {
             this.ImageManipulation = imageManipulation;
-            rand = new Random();
         }
         private readonly ImageManipulationService ImageManipulation;
-        Random rand;
 
         public async Task Fight(SocketCommandContext Context, IUser user1, IUser user2)
         {
@@ -46,6 +44,8 @@ namespace RandomBot.Services
 
         private string GetWinner(string user1, string user2)
         {
+            var rand = new Random();
+
             var result = rand.Next(1, 101);
             if (result >= 1 && result <= 40) return $"{ user1 } win!";
             if (result >= 41 && result <= 60) return "It's a draw!";

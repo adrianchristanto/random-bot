@@ -47,6 +47,12 @@ $removeremind @ID (ID: Reminder identification code)
                 .AddField("Shipfu", @"
 $shipfugacha/$sg
 $shipfuhistory/$sh")
+                .AddField("Voice Commands", @"
+$join
+$leave
+$coffeetime
+$rain
+$skip")
                 .AddField("Info", @"
 $dev
 $who/$what
@@ -55,7 +61,7 @@ $rigged
 ")
                 .WithColor(Discord.Color.DarkRed);
 
-            await Context.Channel.SendMessageAsync("", false, embed.Build());
+            await Context.Channel.SendMessageAsync(embed: embed.Build());
         }
     }
 }

@@ -1,8 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RandomBot.Entities
 {
@@ -14,6 +10,10 @@ namespace RandomBot.Entities
         {
 
         }
+
+        public virtual DbSet<Doll> Doll { get; set; }
+
+        public virtual DbSet<DollType> DollType { get; set; }
 
         public virtual DbSet<GachaHistory> GachaHistory { get; set; }
 

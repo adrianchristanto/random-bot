@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RandomBot.Services
 {
-    public class ReminderService
+    public class ReminderService : IDisposable
     {
         public ReminderService(DiscordSocketClient discordSocketClient, RandomBotDbContext context)
         {
@@ -19,6 +19,12 @@ namespace RandomBot.Services
         }
         private readonly DiscordSocketClient Client;
         private readonly RandomBotDbContext DbContext;
+
+        public void Dispose()
+        {
+            this.Client.Dispose();
+            this.DbContext.Dispose();
+        }
 
         public SocketTextChannel GetSocketTextChannel(ulong guildId, ulong channelId)
         {

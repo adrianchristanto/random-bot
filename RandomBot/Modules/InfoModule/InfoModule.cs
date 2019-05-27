@@ -46,7 +46,7 @@ Call him if you want to give some feedback
         public async Task Rigged()
         {
             var kappa = await Context.Channel.GetUserAsync(318035086375387136);
-            await ReplyAsync("Expect some gamble rigged by " + kappa.Mention + "'s favor <:pepesmug:370857798415941633>");
+            await ReplyAsync($"{ kappa.Mention } always wins!");
         }
 
         [Command("changelog", RunMode = RunMode.Async)]

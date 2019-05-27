@@ -12,6 +12,7 @@ using RandomBot.Services;
 using RandomBot.Entities;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Timers;
 
 namespace RandomBot
 {
@@ -21,7 +22,7 @@ namespace RandomBot
         private CommandService Commands;
         private DiscordSocketClient Client;
         private IServiceProvider Services;
-        private System.Timers.Timer Timer;
+        private Timer Timer;
 
         static void Main(string[] args) => new Program().Start().GetAwaiter().GetResult();
 
@@ -55,8 +56,8 @@ namespace RandomBot
             Client.Log += Log;
             Client.UserJoined += UserJoined;
 
-            Timer = new System.Timers.Timer(this.SetInitialInterval(int.Parse(Configuration.GetSection("ReminderInterval").Value)));
-            Timer.Elapsed += new System.Timers.ElapsedEventHandler(ElapsedHandlerAsync);
+            Timer = new Timer(this.SetInitialInterval(int.Parse(Configuration.GetSection("ReminderInterval").Value)));
+            Timer.Elapsed += new ElapsedEventHandler(ElapsedHandlerAsync);
             Timer.Enabled = true;
 
             await Task.Delay(-1);
@@ -109,7 +110,11 @@ namespace RandomBot
             {
                 Console.ForegroundColor = ConsoleColor.White;
             }
-            
+
+            if (msg.Source.Contains("Audio #") == false)
+            {
+                Console.WriteLine(msg.ToString());
+            }
             return Task.CompletedTask;
         }
 
@@ -134,6 +139,7 @@ namespace RandomBot
                 .AddSingleton(Client)
                 .AddTransient<DeleteService>()
                 .AddTransient<FightService>()
+                .AddTransient<GunfuService>()
                 .AddTransient<ImageManipulationService>()
                 .AddTransient<InteractiveService>()
                 .AddTransient<ReminderService>()
