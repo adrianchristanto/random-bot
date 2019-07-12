@@ -1,3 +1,9 @@
+## 0.3.3
+
+- Added Voice Channel module
+- Added Doll module
+- Added Kokoro module
+
 ## 0.3.2
 
 - Removed any gif related command (use the one discord provide instead)

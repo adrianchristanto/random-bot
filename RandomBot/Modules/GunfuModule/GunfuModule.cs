@@ -19,5 +19,12 @@ namespace RandomBot.Modules.GunfuModule
             var dollInfo = await this.GunfuService.GetDollInfo(dollName);
             await ReplyAsync(embed: dollInfo.Build());
         }
+
+        [Command("rof", RunMode = RunMode.Async)]
+        public async Task RofCalculation(int rofValue)
+        {
+            var message = this.GunfuService.RofCalculation(rofValue);
+            await ReplyAsync(message);
+        }
     }
 }

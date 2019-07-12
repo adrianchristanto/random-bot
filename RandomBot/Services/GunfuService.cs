@@ -138,5 +138,31 @@ namespace RandomBot.Services
 
             return embed;
         }
+
+        public string RofCalculation(int rofValue)
+        {
+            if (rofValue <= 0)
+            {
+                return "0 or less is basically not shooting <:gigaPepega:547315752949121024> ";
+            }
+            
+            var frameCount = 30 * ((double)50 / rofValue);
+
+            if (frameCount < 12)
+            {
+                frameCount = 12;
+            }
+            else if (frameCount % 1 == 0)
+            {
+                frameCount = frameCount - 1;
+            }
+            else
+            {
+                frameCount = Math.Floor(frameCount);
+            }
+
+            return $@"ROF Value: { rofValue }
+Frames per shot: { (int)frameCount }";
+        }
     }
 }
