@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Discord.WebSocket;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
@@ -62,6 +65,40 @@ namespace RandomBot.Services
                 imageGraphics.FillRectangle(avatarBrush, new Rectangle(new Point(x, y), new Size(avatarImage.Width, avatarImage.Height)));
 
                 return ToStream(image, this.GetImageFormat(image.RawFormat));
+            }
+        }
+
+        public Stream WriteTextOnImage(string directory, SocketGuildUser socketGuildUser, int xCoor, int yCoor)
+        {
+            var nameToDraw = new List<string>();
+            var name = socketGuildUser.Nickname ?? socketGuildUser.Username;
+            while (name.Length > 6)
+            {
+                var partialName = name.Substring(0, 6);
+                name = name.Substring(6, name.Length - 6);
+                nameToDraw.Add($"{ partialName }-");
+            }
+            nameToDraw.Add(name);
+
+            using (var templateImage = Image.FromFile($@"Image\{ directory }.jpg"))
+            using (var imageGraphics = Graphics.FromImage(templateImage))
+            using (var font = new FontFamily("Kimmun"))
+            {
+                var stringFormat = new StringFormat
+                {
+                    Alignment = StringAlignment.Center
+                };
+
+                var graphicsPath = new GraphicsPath();
+                for (var i = 0; i < nameToDraw.Count; i++)
+                {
+                    graphicsPath.AddString(nameToDraw[i], font, (int)FontStyle.Regular, 14, new Point(xCoor, yCoor + i * 14), stringFormat);
+                }
+
+                imageGraphics.SmoothingMode = SmoothingMode.HighQuality;
+                imageGraphics.FillPath(Brushes.Black, graphicsPath);
+
+                return ToStream(templateImage, this.GetImageFormat(templateImage.RawFormat));
             }
         }
 

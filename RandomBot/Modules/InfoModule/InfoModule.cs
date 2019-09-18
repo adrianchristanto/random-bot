@@ -12,18 +12,20 @@ namespace RandomBot.Modules.InfoModule
         {
             var embed = new EmbedBuilder()
                 .WithTitle("Development Status")
+                .AddField("Build 0.3.4", @"
+Add text edit on image feature
+Add Freedom Module
+Add precise search feature for GunfuService.cs
+Improved flexibility on adding Reminder")
+                .AddField("Build 0.3.3", @"
+Added Voice Channel module
+Added Doll module
+Added Kokoro module")
                 .AddField("Build 0.3.2", @"
 Removed any gif related command (use the one discord provide instead)
 Removed $markdown command
 Small changes in Reminder command
 A few command rigged")
-                .AddField("Build 0.3.1", @"
-Added showallremind module
-User now able to set reminder to daily with reminddaily command
-Fix message when no reminder found")
-                .AddField("Build 0.3.0", @"
-Added time scheduler that run once every minute
-Added remind module, show remind module, and remove remind module")
                 .AddField("More?", @"Details on https://gitlab.com/adrianch/RandomBot/blob/master/CHANGELOG.md")
                 .WithColor(Discord.Color.DarkRed);
             await ReplyAsync("", embed: embed.Build());

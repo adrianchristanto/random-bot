@@ -1,3 +1,10 @@
+## 0.3.4
+
+- Add text edit on image feature
+- Add Freedom Module
+- Add precise search feature for GunfuService.cs
+- Improved flexibility on adding Reminder
+
 ## 0.3.3
 
 - Added Voice Channel module

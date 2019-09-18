@@ -38,7 +38,7 @@ namespace RandomBot.Services
             var (ReminderMessage, ReminderDate, IsValid) = this.ValidateMessage(message);
             if (IsValid == false)
             {
-                await context.Channel.SendMessageAsync("Please type the correct format => @Message at @Date [(optional)dd/MM/yyyy (required)HH:mm]");
+                await context.Channel.SendMessageAsync("Please type the correct format (optional: choose one or more) => @Message at @Date [(optional)dd/MM/yyyy (optional)HH:mm]");
             }
             else
             {
@@ -62,8 +62,6 @@ namespace RandomBot.Services
         private (string ReminderMessage, DateTime ReminderDate, bool IsValid) ValidateMessage(string message)
         {
             var separator = " at ";
-            var reminderMessage = message.Substring(0, message.LastIndexOf(separator, StringComparison.OrdinalIgnoreCase));
-            var reminderDateString = message.Substring(message.LastIndexOf(separator, StringComparison.OrdinalIgnoreCase) + separator.Length);
             var isValid = false;
 
             if (message.Contains(separator) == false)
@@ -75,8 +73,19 @@ namespace RandomBot.Services
                 return ("", new DateTime(), isValid);
             }
 
+            var reminderMessage = message.Substring(0, message.LastIndexOf(separator, StringComparison.OrdinalIgnoreCase));
+            var reminderDateString = message.Substring(message.LastIndexOf(separator, StringComparison.OrdinalIgnoreCase) + separator.Length);
             var reminderDate = DateTime.Now;
-            if (reminderDateString.Length < 16)
+
+            if (reminderDateString.Length == 16)
+            {
+                isValid = DateTime.TryParse(reminderDateString, out reminderDate);
+            }
+            if (reminderDateString.Length == 10)
+            {
+                isValid = DateTime.TryParse(reminderDateString, out reminderDate);
+            }
+            if (reminderDateString.Length < 10)
             {
                 var timeSeparator = ":";
                 var hourString = reminderDateString.Substring(0, reminderDateString.LastIndexOf(timeSeparator, StringComparison.OrdinalIgnoreCase));
@@ -96,10 +105,7 @@ namespace RandomBot.Services
                     return ("", new DateTime(), isValid);
                 }
             }
-            else
-            {
-                isValid = DateTime.TryParse(reminderDateString, out reminderDate);
-            }
+
             return (reminderMessage, reminderDate, isValid);
         }
 

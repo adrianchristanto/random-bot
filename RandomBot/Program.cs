@@ -30,7 +30,7 @@ namespace RandomBot
         {
             var basePath = Directory.GetCurrentDirectory();
 
-            // If on debug mode.
+            // On debug mode only.
             if (basePath.Contains("netcoreapp"))
             {
                 basePath = Path.GetFullPath(Path.Combine(basePath, @"..\..\..\"));

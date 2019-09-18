@@ -36,7 +36,10 @@ namespace RandomBot.Services
                 embed.AddField("Error", $"Doll with name { dollName } not found");
                 return embed;
             }
-            if (dolls.Count != 1)
+            
+            var doll = dolls.FirstOrDefault(Q => string.Equals(Q.DollName, dollName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (dolls.Count != 1 && doll == null)
             {
                 var dollList = new StringBuilder();
                 for (var i = 0; i < dolls.Count; i++)
@@ -49,7 +52,7 @@ namespace RandomBot.Services
                 return embed;
             }
 
-            var doll = dolls.FirstOrDefault();
+            doll = doll ?? dolls.FirstOrDefault();
 
             return this.GenerateDollData(embed, doll);
         }
