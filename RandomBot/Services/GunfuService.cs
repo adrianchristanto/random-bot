@@ -146,14 +146,14 @@ namespace RandomBot.Services
         {
             if (rofValue <= 0)
             {
-                return "0 or less is basically not shooting <:gigaPepega:547315752949121024> ";
+                return "0 or less is basically not shooting <:Pepeg:598397737817473045> ";
             }
             
-            var frameCount = 30 * ((double)50 / rofValue);
+            var frameCount = 60 * ((double)50 / rofValue);
 
-            if (frameCount < 12)
+            if (frameCount < 24)
             {
-                frameCount = 12;
+                frameCount = 24;
             }
             else if (frameCount % 1 == 0)
             {

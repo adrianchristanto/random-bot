@@ -95,8 +95,7 @@ namespace RandomBot
             var result = await Commands.ExecuteAsync(context, argPos, Services);
             if (result.IsSuccess == false)
             {
-                var emoteExist = Emote.TryParse("<:veriConfuse:528044464795680787>", out var emote);
-                await context.Channel.SendMessageAsync($"Apa sih { emote }");
+                await context.Channel.SendMessageAsync($"Apa sih <:teriDerp:628946304369950720>");
             }
         }
 

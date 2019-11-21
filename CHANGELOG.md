@@ -1,3 +1,9 @@
+## 0.3.5
+
+- Improve Reminder Module speed decreasing the ammount of database connection
+- Improve Reminder Module saving method to prevent data not updated resulting in multiple reminders
+- Change Gunfu's ROF calculation from 30 FPS to 60 FPS cap
+
 ## 0.3.4
 
 - Add text edit on image feature
