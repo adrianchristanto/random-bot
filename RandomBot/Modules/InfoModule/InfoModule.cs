@@ -12,6 +12,12 @@ namespace RandomBot.Modules.InfoModule
         {
             var embed = new EmbedBuilder()
                 .WithTitle("Development Status")
+                .AddField("Build 0.3.6", @"
+Added $MusicList command
+Changes on reminder module to improve code readability
+Message for $delete command changed
+Fixed message on $timeconvert command
+Improved code readability on bot startup")
                 .AddField("Build 0.3.5", @"
 Improved Reminder Module
 Changes Gunfu ROF calculation from 30 FPS to 60 FPS cap")
@@ -20,10 +26,6 @@ Added text edit on image feature
 Added Freedom Module
 Added precise search feature for GunfuService.cs
 Improved flexibility on adding Reminder")
-                .AddField("Build 0.3.3", @"
-Added Voice Channel module
-Added Doll module
-Added Kokoro module")
                 .AddField("More?", @"Details on https://gitlab.com/adrianch/RandomBot/blob/dev-0.4.0/CHANGELOG.md")
                 .WithColor(Discord.Color.DarkRed);
             await ReplyAsync("", embed: embed.Build());

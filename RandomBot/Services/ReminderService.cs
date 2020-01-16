@@ -40,6 +40,10 @@ namespace RandomBot.Services
             {
                 await context.Channel.SendMessageAsync("Please type the correct format (optional: choose one or more) => @Message at @Date [(optional)dd/MM/yyyy (optional)HH:mm]");
             }
+            else if (ReminderDate < DateTime.Now)
+            {
+                await context.Channel.SendMessageAsync("There's no reason for me to remind of your past");
+            }
             else
             {
                 var recipientId = await this.GetReminderRecipientId(context);
@@ -63,31 +67,38 @@ namespace RandomBot.Services
         {
             var separator = " at ";
             var isValid = false;
+            var dateNow = DateTime.Now;
 
             if (message.Contains(separator) == false)
             {
-                return ("", new DateTime(), isValid);
+                return (string.Empty, dateNow, isValid);
             }
             else if (string.IsNullOrWhiteSpace(message.Substring(message.LastIndexOf(separator, StringComparison.OrdinalIgnoreCase) + separator.Length)))
             {
-                return ("", new DateTime(), isValid);
+                return (string.Empty, dateNow, isValid);
             }
 
             var reminderMessage = message.Substring(0, message.LastIndexOf(separator, StringComparison.OrdinalIgnoreCase));
             var reminderDateString = message.Substring(message.LastIndexOf(separator, StringComparison.OrdinalIgnoreCase) + separator.Length);
-            var reminderDate = DateTime.Now;
-
-            if (reminderDateString.Length == 16)
+            var reminderDate = dateNow;
+            
+            if (reminderDateString.Length >= 10)
             {
                 isValid = DateTime.TryParse(reminderDateString, out reminderDate);
-            }
-            if (reminderDateString.Length == 10)
-            {
-                isValid = DateTime.TryParse(reminderDateString, out reminderDate);
+                if (dateNow > reminderDate)
+                {
+                    return (string.Empty, reminderDate, isValid);
+                }
             }
             if (reminderDateString.Length < 10)
             {
                 var timeSeparator = ":";
+
+                if (reminderDateString.Contains(timeSeparator) == false)
+                {
+                    return (string.Empty, dateNow, isValid);
+                }
+
                 var hourString = reminderDateString.Substring(0, reminderDateString.LastIndexOf(timeSeparator, StringComparison.OrdinalIgnoreCase));
                 var minuteString = reminderDateString.Substring(reminderDateString.LastIndexOf(timeSeparator, StringComparison.OrdinalIgnoreCase) + timeSeparator.Length);
 
@@ -102,7 +113,7 @@ namespace RandomBot.Services
                 }
                 else
                 {
-                    return ("", new DateTime(), isValid);
+                    return (string.Empty, dateNow, isValid);
                 }
             }
 
@@ -117,15 +128,14 @@ namespace RandomBot.Services
 
             if (recipient == null)
             {
-                var newRecipient = new ReminderRecipient
+                recipient = new ReminderRecipient
                 {
                     GuildId = context.Guild.Id.ToString(),
                     ChannelId = context.Channel.Id.ToString()
                 };
 
-                this.DbContext.ReminderRecipient.Add(newRecipient);
-
-                recipient = newRecipient;
+                this.DbContext.ReminderRecipient.Add(recipient);
+                await this.DbContext.SaveChangesAsync();
             }
 
             return recipient.ReminderRecipientId;
@@ -178,12 +188,12 @@ namespace RandomBot.Services
                 for (var i = 0; i < openReminder.Count; i++)
                 {
                     var reminderTime = openReminder[i].IsDaily == true ? openReminder[i].ReminderDateTime.ToShortTimeString() : openReminder[i].ReminderDateTime.ToString("dd/MM/yyyy HH:mm");
-                    var isDaily = openReminder[i].IsDaily == true ? "(daily)" : "";
+                    var isDaily = openReminder[i].IsDaily == true ? "(daily)" : string.Empty;
                     embed.AddField($"{ i + 1 }. { openReminder[i].ReminderId }", $@"{ openReminder[i].ReminderMessage } at { reminderTime } { isDaily }");
                 }
             }
 
-            await context.Channel.SendMessageAsync("", embed: embed.Build());
+            await context.Channel.SendMessageAsync(string.Empty, embed: embed.Build());
         }
 
         public async Task ExecuteReminder()
@@ -210,8 +220,8 @@ namespace RandomBot.Services
                 var reminderCount = 0;
                 for (var i = 0; i < reminders.Count; i++)
                 {
-                    var hourDifference = (dateNow - reminders[i].ReminderDateTime).TotalHours;
-                    if (hourDifference < 2)
+                    var minuteDifference = (dateNow - reminders[i].ReminderDateTime).TotalMinutes;
+                    if (minuteDifference <= 90)
                     {
                         reminderCount++;
                         var reminderDate = reminders[i].IsDaily == true ? reminders[i].ReminderDateTime.ToShortTimeString() : reminders[i].ReminderDateTime.ToString("dd/MM/yyyy HH:mm");
@@ -231,7 +241,12 @@ namespace RandomBot.Services
             await this.UpdateReminder(remindersToUpdate);
             Parallel.ForEach(reminderMessage, async reminder =>
             {
-                await reminder.Key.SendMessageAsync(embed: reminder.Value.Build());
+                var restMessage = await reminder.Key.SendMessageAsync(embed: reminder.Value.Build());
+                var hasEmote = Emote.TryParse("<a:rooBobble:603122183153385472>", out var emote);
+                if (hasEmote)
+                {
+                    await restMessage.AddReactionAsync(emote);
+                }
             });
         }
 

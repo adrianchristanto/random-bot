@@ -19,13 +19,8 @@ namespace RandomBot.Services
                 var channel = Context.Guild.GetTextChannel(Context.Channel.Id);
                 await channel.DeleteMessagesAsync(messagesToDelete);
 
-                var messageReply = await Context.Channel.SendMessageAsync($"{ Context.User.Mention } deleted { num } message(s). This message will be deleted in 3 seconds");
-                await Task.Delay(1000);
-                for (var i = 2; i > 0; i--)
-                {
-                    await messageReply.ModifyAsync(x => x.Content = $"{ Context.User.Mention } deleted { num } message(s). This message will be deleted in { i } seconds");
-                    await Task.Delay(1000);
-                }
+                var messageReply = await Context.Channel.SendMessageAsync($"{ Context.User.Mention } deleted { num } message(s). This message will be deleted in a few seconds seconds");
+                await Task.Delay(3000);
                 await messageReply.DeleteAsync();
             }
             else

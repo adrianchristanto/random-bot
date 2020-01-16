@@ -12,17 +12,11 @@ using System.Threading.Tasks;
 
 namespace RandomBot.Services
 {
-    public class MusicName
-    {
-        public string CoffeTime = "CoffeTime";
-        public string Rain = "Rain";
-    }
-
     public class MusicProcess
     {
         public int ProcessId { get; set; }
         public Queue<string> Queue { get; set; }
-    } 
+    }
 
     public class VoiceChannelService : IDisposable
     {
@@ -33,7 +27,7 @@ namespace RandomBot.Services
         private readonly DiscordSocketClient Client;
         private readonly ConcurrentDictionary<ulong, IAudioClient> ConnectedChannels = new ConcurrentDictionary<ulong, IAudioClient>();
         private readonly ConcurrentDictionary<IAudioClient, MusicProcess> MusicQueue = new ConcurrentDictionary<IAudioClient, MusicProcess>();
-        
+
         public void Dispose()
         {
             this.Client.Dispose();
@@ -41,7 +35,7 @@ namespace RandomBot.Services
 
         public SocketCommandContext Context { get; set; }
         public IVoiceChannel VoiceChannel { get; set; }
-        
+
         public IVoiceChannel GetVoiceChannel()
         {
             var guildUser = this.Context.Message.Author as IGuildUser;
@@ -75,6 +69,23 @@ namespace RandomBot.Services
             {
                 Console.WriteLine($"Failed to remove voice channel with Server ID: { this.Context.Guild.Id }");
             }
+        }
+
+        public async Task GetMusicList()
+        {
+            var musicDirectory = $"{ Directory.GetCurrentDirectory() }\\Music";
+            var directoryInfo = new DirectoryInfo(musicDirectory);
+            var musicList = directoryInfo.GetFiles("*.mp3");
+
+            var embedMessage = this.CreateNewEmbedBuilder();
+            var itemMessages = "";
+            for (var i = 0; i < musicList.Length; i++)
+            {
+                itemMessages += ($"{ i + 1 }. { musicList[i] }\r");
+            }
+
+            embedMessage.AddField("Playlist:", itemMessages);
+            await this.Context.Channel.SendMessageAsync(embed: embedMessage.Build());
         }
 
         public async Task GetPlayList()
@@ -118,6 +129,12 @@ namespace RandomBot.Services
 
         public async Task PlayMusic(string musicName)
         {
+            if (this.HasDirectory(musicName) == false)
+            {
+                await this.Context.Channel.SendMessageAsync("Music not found");
+                return;
+            }
+
             var alreadyInVoiceChannel = this.ConnectedChannels.TryGetValue(this.Context.Guild.Id, out var audioClient);
             if (alreadyInVoiceChannel == false)
             {
@@ -144,6 +161,12 @@ namespace RandomBot.Services
 
                 await this.PlayAsync(audioClient, musicProcess);
             }
+        }
+
+        private bool HasDirectory(string musicName)
+        {
+            var directory = $"{ Directory.GetCurrentDirectory() }\\Music\\{ musicName }.mp3";
+            return File.Exists(directory);
         }
 
         private async Task PlayAsync(IAudioClient audioClient, MusicProcess musicProcess)

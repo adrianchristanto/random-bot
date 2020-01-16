@@ -41,5 +41,14 @@ namespace RandomBot.Modules.ReminderModule
         {
             await this.ReminderService.RemoveReminder(Context, guid);
         }
+
+        [Command("execremind", RunMode = RunMode.Async)]
+        public async Task ExecuteReminder()
+        {
+            if (Context.User.Id == 318035086375387136)
+            {
+                await this.ReminderService.ExecuteReminder();
+            }
+        }
     }
 }

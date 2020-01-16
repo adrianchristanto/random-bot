@@ -1,14 +1,22 @@
+## 0.3.6
+
+- Added $MusicList command
+- Changes on reminder module to improve code readability
+- Message for $delete command changed
+- Fixed message on $timeconvert command
+- Improved code readability on bot startup
+
 ## 0.3.5
 
-- Improve Reminder Module speed decreasing the ammount of database connection
-- Improve Reminder Module saving method to prevent data not updated resulting in multiple reminders
+- Improved Reminder Module speed decreasing the ammount of database connection
+- Improved Reminder Module saving method to prevent data not updated resulting in multiple reminders
 - Change Gunfu's ROF calculation from 30 FPS to 60 FPS cap
 
 ## 0.3.4
 
-- Add text edit on image feature
-- Add Freedom Module
-- Add precise search feature for GunfuService.cs
+- Added text edit on image feature
+- Added Freedom Module
+- Added precise search feature for GunfuService.cs
 - Improved flexibility on adding Reminder
 
 ## 0.3.3

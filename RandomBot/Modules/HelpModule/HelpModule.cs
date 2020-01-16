@@ -50,8 +50,8 @@ $shipfuhistory/$sh")
                 .AddField("Voice Commands", @"
 $join
 $leave
-$coffeetime
-$rain
+$play @MusicName
+$musiclist
 $skip")
                 .AddField("Info", @"
 $dev
