@@ -29,6 +29,7 @@ $bitch/$b @Someone (Someone: User mentioned. Optional.)
 $dab
 $dance
 $dieshouri
+$dorime
 $drool
 $facepalm
 $fight/$f @Person1 @Person2 (Person: User mentioned. Person2: Optional)

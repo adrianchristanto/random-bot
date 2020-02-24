@@ -100,7 +100,7 @@ namespace RandomBot
             var result = await Commands.ExecuteAsync(context, argPos, Services);
             if (result.IsSuccess == false)
             {
-                await context.Channel.SendMessageAsync($"Apa sih <:teriDerp:628946304369950720>");
+                await context.Channel.SendMessageAsync($"Apa sih <:PogYou:678303962876739596>");
             }
         }
     }

@@ -81,7 +81,9 @@ namespace RandomBot.Services
             var itemMessages = "";
             for (var i = 0; i < musicList.Length; i++)
             {
-                itemMessages += ($"{ i + 1 }. { musicList[i] }\r");
+                var fileName = musicList[i].Name;
+                fileName = fileName.Substring(0, fileName.Length - 4);
+                itemMessages += ($"{ i + 1 }. { fileName }\r");
             }
 
             embedMessage.AddField("Playlist:", itemMessages);

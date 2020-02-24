@@ -1,3 +1,8 @@
+## 0.3.7
+
+- Added $Dorime command
+- Improved Entities
+
 ## 0.3.6
 
 - Added $MusicList command

@@ -1,22 +1,24 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RandomBot.Entities
 {
-    public class GachaHistoryDetail
+    public partial class GachaHistoryDetail
     {
-        [Key]
         public int GachaHistoryDetailId { get; set; }
-
+        [Required]
+        [StringLength(20)]
+        public string UserId { get; set; }
+        public int ShipfuId { get; set; }
         public int GetCount { get; set; }
 
-        public int ShipfuId { get; set; }
-
-        public string UserId { get; set; }
+        [ForeignKey("ShipfuId")]
+        [InverseProperty("GachaHistoryDetail")]
+        public Shipfu Shipfu { get; set; }
+        [ForeignKey("UserId")]
+        [InverseProperty("GachaHistoryDetail")]
+        public GachaHistory User { get; set; }
     }
 }

@@ -12,6 +12,9 @@ namespace RandomBot.Modules.InfoModule
         {
             var embed = new EmbedBuilder()
                 .WithTitle("Development Status")
+                .AddField("Build 0.3.7", @"
+Added $Dorime command
+Updated Entities")
                 .AddField("Build 0.3.6", @"
 Added $MusicList command
 Changes on reminder module to improve code readability

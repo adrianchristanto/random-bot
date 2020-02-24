@@ -32,6 +32,7 @@ namespace RandomBot.Modules.VoiceChannelModule
         [Command("MusicList", RunMode = RunMode.Async)]
         public async Task MusicList()
         {
+            this.VoiceChannelService.Context = Context;
             await this.VoiceChannelService.GetMusicList();
         }
 
