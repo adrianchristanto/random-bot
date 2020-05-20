@@ -12,12 +12,14 @@ namespace RandomBot.Entities
             Doll = new HashSet<Doll>();
         }
 
-        public int DollTypeId { get; set; }
+        [Key]
+        [StringLength(3)]
+        public string DollTypeCode { get; set; }
         [Required]
-        [StringLength(10)]
+        [StringLength(14)]
         public string DollTypeName { get; set; }
 
-        [InverseProperty("DollType")]
+        [InverseProperty("DollTypeCodeNavigation")]
         public ICollection<Doll> Doll { get; set; }
     }
 }

@@ -61,12 +61,11 @@ namespace RandomBot.Services
         {
             var doll = await
                 (from d in this.DbContext.Doll
-                 join dt in this.DbContext.DollType on d.DollTypeId equals dt.DollTypeId
                  where d.DollName.Contains(dollName)
                  select new DollModel
                  {
                      DollName = d.DollName,
-                     DollTypeName = dt.DollTypeName,
+                     DollTypeName = d.DollTypeCode,
                      HP = d.HP,
                      Damage = d.Damage,
                      Accuracy = d.Accuracy,

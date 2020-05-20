@@ -12,6 +12,7 @@ namespace RandomBot.Entities
         public virtual DbSet<DollType> DollType { get; set; }
         public virtual DbSet<GachaHistory> GachaHistory { get; set; }
         public virtual DbSet<GachaHistoryDetail> GachaHistoryDetail { get; set; }
+        public virtual DbSet<HeavyOrdnanceCorp> HeavyOrdnanceCorp { get; set; }
         public virtual DbSet<Reminder> Reminder { get; set; }
         public virtual DbSet<ReminderRecipient> ReminderRecipient { get; set; }
         public virtual DbSet<Shipfu> Shipfu { get; set; }
@@ -21,7 +22,7 @@ namespace RandomBot.Entities
         {
             modelBuilder.Entity<Doll>(entity =>
             {
-                entity.Property(e => e.DollName).ValueGeneratedNever();
+                entity.Property(e => e.DollId).ValueGeneratedNever();
 
                 entity.Property(e => e.Accuracy).IsUnicode(false);
 
@@ -30,6 +31,8 @@ namespace RandomBot.Entities
                 entity.Property(e => e.ClipSize).IsUnicode(false);
 
                 entity.Property(e => e.Damage).IsUnicode(false);
+
+                entity.Property(e => e.DollTypeCode).IsUnicode(false);
 
                 entity.Property(e => e.Evasion).IsUnicode(false);
 
@@ -47,15 +50,19 @@ namespace RandomBot.Entities
 
                 entity.Property(e => e.TileModBonusLocation).IsUnicode(false);
 
-                entity.HasOne(d => d.DollType)
+                entity.HasOne(d => d.DollTypeCodeNavigation)
                     .WithMany(p => p.Doll)
-                    .HasForeignKey(d => d.DollTypeId)
+                    .HasForeignKey(d => d.DollTypeCode)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Doll_DollType");
             });
 
             modelBuilder.Entity<DollType>(entity =>
             {
+                entity.Property(e => e.DollTypeCode)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
+
                 entity.Property(e => e.DollTypeName).IsUnicode(false);
             });
 
@@ -81,6 +88,31 @@ namespace RandomBot.Entities
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_GachaHistoryDetail_UserId");
+            });
+
+            modelBuilder.Entity<HeavyOrdnanceCorp>(entity =>
+            {
+                entity.Property(e => e.HocId).ValueGeneratedNever();
+
+                entity.Property(e => e.Chip).IsUnicode(false);
+
+                entity.Property(e => e.Lethality).IsUnicode(false);
+
+                entity.Property(e => e.NormalAttack).IsUnicode(false);
+
+                entity.Property(e => e.Pierce).IsUnicode(false);
+
+                entity.Property(e => e.Precision).IsUnicode(false);
+
+                entity.Property(e => e.Range).IsUnicode(false);
+
+                entity.Property(e => e.Reload).IsUnicode(false);
+
+                entity.Property(e => e.Skill1).IsUnicode(false);
+
+                entity.Property(e => e.Skill2).IsUnicode(false);
+
+                entity.Property(e => e.Skill3).IsUnicode(false);
             });
 
             modelBuilder.Entity<Reminder>(entity =>

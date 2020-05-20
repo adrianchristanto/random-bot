@@ -1,3 +1,10 @@
+## 0.4.0
+
+- Added $hoc command
+- Added $whale command
+- Added $scam command
+- Improved database access related task
+
 ## 0.3.7
 
 - Added $Dorime command

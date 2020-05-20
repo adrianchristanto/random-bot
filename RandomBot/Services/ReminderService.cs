@@ -135,7 +135,6 @@ namespace RandomBot.Services
                 };
 
                 this.DbContext.ReminderRecipient.Add(recipient);
-                //await this.DbContext.SaveChangesAsync();
             }
 
             return recipient.ReminderRecipientId;

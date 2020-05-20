@@ -56,6 +56,7 @@ namespace RandomBot
                 .AddTransient<DeleteService>()
                 .AddTransient<FightService>()
                 .AddTransient<GunfuService>()
+                .AddTransient<HeavyOrdnanceCorpService>()
                 .AddTransient<ImageManipulationService>()
                 .AddTransient<InteractiveService>()
                 .AddTransient<ReminderService>()

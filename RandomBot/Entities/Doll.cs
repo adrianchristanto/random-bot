@@ -7,10 +7,13 @@ namespace RandomBot.Entities
 {
     public partial class Doll
     {
-        [Key]
+        public Guid DollId { get; set; }
+        [Required]
         [StringLength(100)]
         public string DollName { get; set; }
-        public int DollTypeId { get; set; }
+        [Required]
+        [StringLength(3)]
+        public string DollTypeCode { get; set; }
         [Required]
         [StringLength(12)]
         public string HP { get; set; }
@@ -47,8 +50,8 @@ namespace RandomBot.Entities
         [StringLength(255)]
         public string TileEffect { get; set; }
 
-        [ForeignKey("DollTypeId")]
+        [ForeignKey("DollTypeCode")]
         [InverseProperty("Doll")]
-        public DollType DollType { get; set; }
+        public DollType DollTypeCodeNavigation { get; set; }
     }
 }
