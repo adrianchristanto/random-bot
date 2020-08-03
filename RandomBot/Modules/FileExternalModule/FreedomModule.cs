@@ -7,7 +7,7 @@ namespace RandomBot.Modules.FileExternalModule
     public class FreedomModule : ModuleBase<SocketCommandContext>
     {
         [Command("freedom", RunMode = RunMode.Async)]
-        public async Task Ganbaru()
+        public async Task Freedom()
         {
             var embed = new EmbedBuilder()
                 .WithColor(Discord.Color.DarkRed)

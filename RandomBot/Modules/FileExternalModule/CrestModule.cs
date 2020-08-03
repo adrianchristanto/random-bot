@@ -7,7 +7,7 @@ namespace RandomBot.Modules.FileExternalModule
     public class CrestModule : ModuleBase<SocketCommandContext>
     {
         [Command("crest", RunMode = RunMode.Async)]
-        public async Task Dab()
+        public async Task Crest()
         {
             var embed = new EmbedBuilder()
                 .WithColor(Discord.Color.DarkRed)

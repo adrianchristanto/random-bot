@@ -7,7 +7,7 @@ namespace RandomBot.Modules.FileExternalModule
     public class KokoroModule : ModuleBase<SocketCommandContext>
     {
         [Command("kokoro", RunMode = RunMode.Async)]
-        public async Task Ganbaru()
+        public async Task Kokoro()
         {
             var embed = new EmbedBuilder()
                 .WithColor(Discord.Color.DarkRed)

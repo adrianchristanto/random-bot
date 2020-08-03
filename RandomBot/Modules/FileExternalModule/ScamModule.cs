@@ -7,7 +7,7 @@ namespace RandomBot.Modules.FileExternalModule
     public class ScamModule : ModuleBase<SocketCommandContext>
     {
         [Command("scam", RunMode = RunMode.Async)]
-        public async Task Dab()
+        public async Task Scam()
         {
             var embed = new EmbedBuilder()
                 .WithColor(Discord.Color.DarkRed)

@@ -50,7 +50,7 @@ namespace RandomBot.Services
 
                 var reminder = new Reminder
                 {
-                    ReminderId = new Guid(),
+                    ReminderId = Guid.NewGuid(),
                     ReminderRecipientId = recipientId,
                     ReminderDateTime = ReminderDate,
                     ReminderMessage = ReminderMessage,
