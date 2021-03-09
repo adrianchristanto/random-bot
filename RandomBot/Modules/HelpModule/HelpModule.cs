@@ -22,11 +22,13 @@ $hello/$hi @Someone (Someone: User mentioned. Optional.)
 $roll/$r
 $decide @Option1 @Option2
 $delete/$d @Number (Number: Messages to delete. Max 99.)
+$reading
 $timeconvert/$tc @Number (Number: Add or subtract hours from current time.)")
                 .AddField("Image Commands", @"
 $bait
 $bitch/$b @Someone (Someone: User mentioned. Optional.)
 $dab
+$damedane
 $dance
 $dieshouri
 $dorime
@@ -35,7 +37,9 @@ $facepalm
 $fight/$f @Person1 @Person2 (Person: User mentioned. Person2: Optional)
 $ganbaru
 $orz
+$scam
 $soon
+$whale
 $yes/$no")
                 .AddField("Reminder Commands", @"
 $remind @Message at @Date 
@@ -60,6 +64,25 @@ $who/$what
 $changelog
 $rigged
 ")
+                .WithColor(Discord.Color.DarkRed);
+
+            await Context.Channel.SendMessageAsync(embed: embed.Build());
+        }
+
+        [Command("gfl", RunMode = RunMode.Async)]
+        [Summary("Shows command list")]
+        [Alias("h")]
+        public async Task GirlsFrontline()
+        {
+            var messagesToDelete = await Context.Channel.GetMessageAsync(Context.Message.Id);
+            await messagesToDelete.DeleteAsync();
+
+            var embed = new EmbedBuilder()
+                .WithAuthor("Girls Frontline Command List:")
+                .AddField("Commands", @"
+$doll @name
+$hoc @name
+$rof @value")
                 .WithColor(Discord.Color.DarkRed);
 
             await Context.Channel.SendMessageAsync(embed: embed.Build());

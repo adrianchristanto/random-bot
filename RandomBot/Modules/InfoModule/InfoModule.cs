@@ -16,6 +16,7 @@ namespace RandomBot.Modules.InfoModule
 Added $hoc command
 Added $whale command
 Added $scam command
+Added $damedane command
 Improved database access related task")
                 .AddField("Build 0.3.7", @"
 Added $Dorime command
