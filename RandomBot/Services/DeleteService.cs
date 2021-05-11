@@ -6,12 +6,12 @@ namespace RandomBot.Services
 {
     public class DeleteService
     {
-        public async Task DeleteMessages(int num, SocketCommandContext Context)
+        public async Task DeleteMessages(SocketCommandContext Context, int num)
         {
             var guildOwner = Context.Guild.OwnerId;
             if (Context.User.Id != guildOwner && Context.User.Id != 318035086375387136)
             {
-                await Context.Channel.SendMessageAsync("DENIED <:hyperGachi:370860482451734528>");
+                await Context.Channel.SendMessageAsync("DENIED <:kokojanai:684341545813409810>");
             }
             else if (num > 0 && num < 100)
             {
@@ -27,6 +27,13 @@ namespace RandomBot.Services
             {
                 await Context.Channel.SendMessageAsync("???");
             }
+        }
+
+        public async Task CleanUpMessages(SocketCommandContext Context, ulong messageId)
+        {
+            var messagesToDelete = await Context.Channel.GetMessagesAsync(messageId, Direction.After).FlattenAsync();
+            var channel = Context.Guild.GetTextChannel(Context.Channel.Id);
+            await channel.DeleteMessagesAsync(messagesToDelete);
         }
     }
 }

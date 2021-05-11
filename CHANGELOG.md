@@ -1,3 +1,8 @@
+## 0.4.1
+- Added $bn command
+- Added $cu command
+- Modified $d response message
+
 ## 0.4.0
 
 - Added $hoc command
