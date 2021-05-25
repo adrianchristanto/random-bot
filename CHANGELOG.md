@@ -8,6 +8,7 @@
 - Added $hoc command
 - Added $whale command
 - Added $scam command
+- Added $damedane command
 - Improved database access related task
 
 ## 0.3.7

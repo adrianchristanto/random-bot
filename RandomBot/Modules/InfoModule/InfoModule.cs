@@ -12,6 +12,11 @@ namespace RandomBot.Modules.InfoModule
         {
             var embed = new EmbedBuilder()
                 .WithTitle("Development Status")
+                .AddField("Build 0.4.1", @"
+Added $bn command
+Added $cu command
+Modified $d response message
+")
                 .AddField("Build 0.4.0", @"
 Added $hoc command
 Added $whale command
@@ -27,7 +32,6 @@ Changes on reminder module to improve code readability
 Message for $delete command changed
 Fixed message on $timeconvert command
 Improved code readability on bot startup")
-                .AddField("More?", @"Details on https://gitlab.com/adrianch/RandomBot/blob/dev-0.4.0/CHANGELOG.md")
                 .WithColor(Discord.Color.DarkRed);
             await ReplyAsync("", embed: embed.Build());
         }
