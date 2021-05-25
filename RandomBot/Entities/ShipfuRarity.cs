@@ -1,20 +1,24 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RandomBot.Entities
 {
-    public class ShipfuRarity
+    public partial class ShipfuRarity
     {
-        [Key]
+        public ShipfuRarity()
+        {
+            Shipfu = new HashSet<Shipfu>();
+        }
+
         public int ShipfuRarityId { get; set; }
-
+        [Required]
+        [StringLength(50)]
         public string ShipfuRarityName { get; set; }
-
         public int ShipfuRarityPercentage { get; set; }
+
+        [InverseProperty("ShipfuRarity")]
+        public ICollection<Shipfu> Shipfu { get; set; }
     }
 }

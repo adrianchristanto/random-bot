@@ -1,3 +1,54 @@
+## 0.4.1
+- Added $bn command
+- Added $cu command
+- Modified $d response message
+
+## 0.4.0
+
+- Added $hoc command
+- Added $whale command
+- Added $scam command
+- Improved database access related task
+
+## 0.3.7
+
+- Added $Dorime command
+- Improved Entities
+
+## 0.3.6
+
+- Added $MusicList command
+- Changes on reminder module to improve code readability
+- Message for $delete command changed
+- Fixed message on $timeconvert command
+- Improved code readability on bot startup
+
+## 0.3.5
+
+- Improved Reminder Module speed decreasing the ammount of database connection
+- Improved Reminder Module saving method to prevent data not updated resulting in multiple reminders
+- Change Gunfu's ROF calculation from 30 FPS to 60 FPS cap
+
+## 0.3.4
+
+- Added text edit on image feature
+- Added Freedom Module
+- Added precise search feature for GunfuService.cs
+- Improved flexibility on adding Reminder
+
+## 0.3.3
+
+- Added Voice Channel module
+- Added Doll module
+- Added Kokoro module
+
+## 0.3.2
+
+- Removed any gif related command (use the one discord provide instead)
+- Removed $markdown command
+- Small changes in Reminder command
+- A few command rigged
+
 ## 0.3.1
 
 - Added showallremind module

@@ -1,6 +1,5 @@
 ﻿using Discord.Commands;
 using RandomBot.Services;
-using System;
 using System.Threading.Tasks;
 
 namespace RandomBot.Modules.ReminderModule
@@ -41,6 +40,15 @@ namespace RandomBot.Modules.ReminderModule
         public async Task RemoveReminder(string guid)
         {
             await this.ReminderService.RemoveReminder(Context, guid);
+        }
+
+        [Command("execremind", RunMode = RunMode.Async)]
+        public async Task ExecuteReminder()
+        {
+            if (Context.User.Id == 318035086375387136)
+            {
+                await this.ReminderService.ExecuteReminder();
+            }
         }
     }
 }

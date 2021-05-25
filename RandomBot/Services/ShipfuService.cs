@@ -10,15 +10,20 @@ using System.Threading.Tasks;
 
 namespace RandomBot.Services
 {
-    public class ShipfuService
+    public class ShipfuService : IDisposable
     {
         public ShipfuService(RandomBotDbContext dbContext)
         {
             this.DbContext = dbContext;
-            rand = new Random();
+            this.rand = new Random();
         }
         private readonly RandomBotDbContext DbContext;
-        Random rand;
+        private readonly Random rand;
+
+        public void Dispose()
+        {
+            this.DbContext.Dispose();
+        }
 
         [Summary("SHIPFU GACHA")]
         public async Task Gacha(SocketCommandContext Context)
@@ -30,7 +35,7 @@ namespace RandomBot.Services
             var shipfuList = await this.GetShipfuByRarity(rarityId);
 
             // Get one shipfu by random
-            var randomShipfuNumber = rand.Next(0, shipfuList.Count);
+            var randomShipfuNumber = this.rand.Next(0, shipfuList.Count);
             var gachaResult = shipfuList[randomShipfuNumber];
 
             // Show gacha result
@@ -38,8 +43,8 @@ namespace RandomBot.Services
             if (rarityId == 4) additionalMessage = "Congratulations, ";
             if (rarityId == 3) additionalMessage = "Wow, ";
             if (rarityId == 2) additionalMessage = "Yay, ";
-            var builder = new EmbedBuilder().WithColor(Discord.Color.DarkRed).WithImageUrl(gachaResult.ShipfuImgUrl);
-            await Context.Channel.SendMessageAsync(additionalMessage + Context.User.Mention + " got " + gachaResult.ShipfuName + "!", false, builder);
+            var embed = new EmbedBuilder().WithColor(Discord.Color.DarkRed).WithImageUrl(gachaResult.ShipfuImgUrl);
+            await Context.Channel.SendMessageAsync(additionalMessage + Context.User.Mention + " got " + gachaResult.ShipfuName + "!", embed: embed.Build());
 
             // Record gacha result to database
             this.ReportGacha(Context.User.Id.ToString(), gachaResult);
@@ -50,10 +55,10 @@ namespace RandomBot.Services
         {
             var gachaHistory = await this.DbContext.GachaHistory.Where(Q => Q.UserId == Context.User.Id.ToString()).FirstOrDefaultAsync();
             var completionRate = await this.GetCompletionRate(Context.User.Id.ToString());
-            var builder = new EmbedBuilder().WithColor(Discord.Color.DarkRed);
+            var embed = new EmbedBuilder().WithColor(Discord.Color.DarkRed);
             if (gachaHistory == null)
             {
-                builder.WithDescription(Context.User.Mention + " hasn't pulled any gacha(s)");
+                embed.WithDescription(Context.User.Mention + " hasn't pulled any gacha(s)");
             }
             else
             {
@@ -65,9 +70,9 @@ namespace RandomBot.Services
 {4} R
 {5} N
 {6}% Shipfu Completion Rate";
-                builder.WithDescription(string.Format(stringDetail, Context.User.Mention, entryCount, gachaHistory.SSRCount, gachaHistory.SRCount, gachaHistory.RareCount, gachaHistory.NormalCount, completionRate));
+                embed.WithDescription(string.Format(stringDetail, Context.User.Mention, entryCount, gachaHistory.SSRCount, gachaHistory.SRCount, gachaHistory.RareCount, gachaHistory.NormalCount, completionRate));
             }
-            await Context.Channel.SendMessageAsync("", false, builder);
+            await Context.Channel.SendMessageAsync("", embed: embed.Build());
         }
 
         [Summary("Get gacha completion rate")]
@@ -94,7 +99,7 @@ namespace RandomBot.Services
         private int GetRarityByRandom(List<ShipfuRarityModel> rarityList)
         {
             // Random for rarity
-            var randomRarity = rand.Next(1, 101);
+            var randomRarity = this.rand.Next(1, 101);
 
             // Get the rarity based on random number
             var flag = true;
@@ -130,59 +135,49 @@ namespace RandomBot.Services
         [Summary("Record gacha into GachaHistory")]
         private async void ReportGacha(string userId, ShipfuModel shipfu)
         {
-            await this.DbContext.Database.CreateExecutionStrategy().Execute(async () =>
+            // Record GachaHistory
+            var gachaHistory = await this.DbContext.GachaHistory.Where(Q => Q.UserId == userId).FirstOrDefaultAsync();
+            if (gachaHistory == null)
             {
-                using (var transaction = await this.DbContext.Database.BeginTransactionAsync())
+                var newGachaHistory = new GachaHistory
                 {
-                    // Record GachaHistory
-                    var gachaHistory = await this.DbContext.GachaHistory.Where(Q => Q.UserId == userId).FirstOrDefaultAsync();
-                    if (gachaHistory == null)
-                    {
-                        var newGachaHistory = new GachaHistory
-                        {
-                            UserId = userId,
-                            NormalCount = shipfu.ShipfuRarity == 1 ? 1 : 0,
-                            RareCount = shipfu.ShipfuRarity == 2 ? 1 : 0,
-                            SRCount = shipfu.ShipfuRarity == 3 ? 1 : 0,
-                            SSRCount = shipfu.ShipfuRarity == 4 ? 1 : 0
-                        };
-                        this.DbContext.GachaHistory.Add(newGachaHistory);
-                    }
-                    else
-                    {
-                        gachaHistory.NormalCount = shipfu.ShipfuRarity == 1 ? gachaHistory.NormalCount + 1 : gachaHistory.NormalCount;
-                        gachaHistory.RareCount = shipfu.ShipfuRarity == 2 ? gachaHistory.RareCount + 1 : gachaHistory.RareCount;
-                        gachaHistory.SRCount = shipfu.ShipfuRarity == 3 ? gachaHistory.SRCount + 1 : gachaHistory.SRCount;
-                        gachaHistory.SSRCount = shipfu.ShipfuRarity == 4 ? gachaHistory.SSRCount + 1 : gachaHistory.SSRCount;
-                        this.DbContext.GachaHistory.Update(gachaHistory);
-                    }
-                    await this.DbContext.SaveChangesAsync();
+                    UserId = userId,
+                    NormalCount = shipfu.ShipfuRarity == 1 ? 1 : 0,
+                    RareCount = shipfu.ShipfuRarity == 2 ? 1 : 0,
+                    SRCount = shipfu.ShipfuRarity == 3 ? 1 : 0,
+                    SSRCount = shipfu.ShipfuRarity == 4 ? 1 : 0
+                };
+                this.DbContext.GachaHistory.Add(newGachaHistory);
+            }
+            else
+            {
+                gachaHistory.NormalCount = shipfu.ShipfuRarity == 1 ? gachaHistory.NormalCount + 1 : gachaHistory.NormalCount;
+                gachaHistory.RareCount = shipfu.ShipfuRarity == 2 ? gachaHistory.RareCount + 1 : gachaHistory.RareCount;
+                gachaHistory.SRCount = shipfu.ShipfuRarity == 3 ? gachaHistory.SRCount + 1 : gachaHistory.SRCount;
+                gachaHistory.SSRCount = shipfu.ShipfuRarity == 4 ? gachaHistory.SSRCount + 1 : gachaHistory.SSRCount;
+                this.DbContext.GachaHistory.Update(gachaHistory);
+            }
 
-                    // Record GachaHistoryDetail
-                    var gachaHistoryDetail = await this.DbContext.GachaHistoryDetail
-                        .Where(Q => Q.UserId == userId && Q.ShipfuId == shipfu.ShipfuId)
-                        .FirstOrDefaultAsync();
-                    if (gachaHistoryDetail == null)
-                    {
-                        var newGachaHistoryDetail = new GachaHistoryDetail
-                        {
-                            UserId = userId,
-                            ShipfuId = shipfu.ShipfuId,
-                            GetCount = 1
-                        };
-                        this.DbContext.GachaHistoryDetail.Add(newGachaHistoryDetail);
-                    }
-                    else
-                    {
-                        gachaHistoryDetail.GetCount++;
-                        this.DbContext.GachaHistoryDetail.Update(gachaHistoryDetail);
-                    }
-                    await this.DbContext.SaveChangesAsync();
-
-                    // Commit changes
-                    transaction.Commit();
-                }
-            });
+            // Record GachaHistoryDetail
+            var gachaHistoryDetail = await this.DbContext.GachaHistoryDetail
+                .Where(Q => Q.UserId == userId && Q.ShipfuId == shipfu.ShipfuId)
+                .FirstOrDefaultAsync();
+            if (gachaHistoryDetail == null)
+            {
+                var newGachaHistoryDetail = new GachaHistoryDetail
+                {
+                    UserId = userId,
+                    ShipfuId = shipfu.ShipfuId,
+                    GetCount = 1
+                };
+                this.DbContext.GachaHistoryDetail.Add(newGachaHistoryDetail);
+            }
+            else
+            {
+                gachaHistoryDetail.GetCount++;
+                this.DbContext.GachaHistoryDetail.Update(gachaHistoryDetail);
+            }
+            await this.DbContext.SaveChangesAsync();
         }
     }
 }

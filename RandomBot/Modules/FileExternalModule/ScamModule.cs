@@ -4,15 +4,14 @@ using System.Threading.Tasks;
 
 namespace RandomBot.Modules.FileExternalModule
 {
-    public class GanbaruModule : ModuleBase<SocketCommandContext>
+    public class ScamModule : ModuleBase<SocketCommandContext>
     {
-        [Command("ganbaru", RunMode = RunMode.Async)]
-        [Summary("Ganbaru Unicorn")]
-        public async Task Ganbaru()
+        [Command("scam", RunMode = RunMode.Async)]
+        public async Task Scam()
         {
             var embed = new EmbedBuilder()
                 .WithColor(Discord.Color.DarkRed)
-                .WithImageUrl("https://i2.wp.com/azurlane.info/wp-content/uploads/2017/11/Eu6JqWN.jpg");
+                .WithImageUrl("https://cdn.discordapp.com/attachments/465884661537570826/712358720012812299/kryuger-trade-deal.png");
             await ReplyAsync("", embed: embed.Build());
         }
     }

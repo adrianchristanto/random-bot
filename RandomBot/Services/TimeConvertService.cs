@@ -13,10 +13,10 @@ namespace RandomBot.Services
             var pdtTime = utcTime.AddHours(-7);
 
             var replyString = $@"
-**Server/Bot Time (UTC +7):** { localDate.ToString("dd MMMM yyyy, HH:mm tt") }
-**UTC:** { utcTime.ToString("dd MMMM yyyy, HH:mm tt") } ({ -(localDate - utcTime).TotalHours } hours difference)
-**ET:** { localDate.AddHours(-11).ToString("dd MMMM yyyy, HH:mm tt") } ({ -(localDate - localDate.AddHours(-11)).TotalHours } hours difference)
-**PDT:** { pdtTime.ToString("dd MMMM yyyy, HH:mm tt") } ({ -(localDate - pdtTime).TotalHours } hours difference)";
+**Server/Bot Time (UTC +7):** { localDate.ToString("dd MMMM yyyy, HH:mm") }
+**UTC:** { utcTime.ToString("dd MMMM yyyy, HH:mm") } ({ -(localDate - utcTime).TotalHours } hours difference)
+**ET:** { localDate.AddHours(-11).ToString("dd MMMM yyyy, HH:mm") } ({ -(localDate - localDate.AddHours(-11)).TotalHours } hours difference)
+**PDT:** { pdtTime.ToString("dd MMMM yyyy, HH:mm") } ({ -(localDate - pdtTime).TotalHours } hours difference)";
 
             await Context.Channel.SendMessageAsync(replyString);
         }

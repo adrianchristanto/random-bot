@@ -12,17 +12,24 @@ namespace RandomBot.Modules.InfoModule
         {
             var embed = new EmbedBuilder()
                 .WithTitle("Development Status")
-                .AddField("Build 0.3.1", @"
-Added showallremind module
-User now able to set reminder to daily with reminddaily command
-Fix message when no reminder found")
-                .AddField("Build 0.3.0", @"
-Added time scheduler that run once every minute
-Added remind module, show remind module, and remove remind module")
-                .AddField("Build 0.2.7", @"Improved every image editting module")
-                .AddField("More?", @"Details on https://gitlab.com/adrianch/RandomBot/blob/master/CHANGELOG.md")
+                .AddField("Build 0.4.0", @"
+Added $hoc command
+Added $whale command
+Added $scam command
+Added $damedane command
+Improved database access related task")
+                .AddField("Build 0.3.7", @"
+Added $Dorime command
+Updated Entities")
+                .AddField("Build 0.3.6", @"
+Added $MusicList command
+Changes on reminder module to improve code readability
+Message for $delete command changed
+Fixed message on $timeconvert command
+Improved code readability on bot startup")
+                .AddField("More?", @"Details on https://gitlab.com/adrianch/RandomBot/blob/dev-0.4.0/CHANGELOG.md")
                 .WithColor(Discord.Color.DarkRed);
-            await ReplyAsync("", false, embed);
+            await ReplyAsync("", embed: embed.Build());
         }
 
         [Command("who", RunMode = RunMode.Async)]
@@ -42,7 +49,7 @@ Call him if you want to give some feedback
         public async Task Rigged()
         {
             var kappa = await Context.Channel.GetUserAsync(318035086375387136);
-            await ReplyAsync("Expect some gamble rigged by " + kappa.Mention + "'s favor <:pepesmug:370857798415941633>");
+            await ReplyAsync($"{ kappa.Mention } always wins!");
         }
 
         [Command("changelog", RunMode = RunMode.Async)]
@@ -63,7 +70,7 @@ Why are you looking for this?", true);
                 .WithAuthor("List of feature not yet implemented or in consideration")
                 .AddField("Memes", "Moar memes?")
                 .WithColor(Discord.Color.DarkRed);
-            await ReplyAsync("", false, embed);
+            await ReplyAsync("", embed: embed.Build());
         }
     }
 }

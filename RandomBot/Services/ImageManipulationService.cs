@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Discord.WebSocket;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
@@ -9,11 +12,6 @@ namespace RandomBot.Services
 {
     public class ImageManipulationService
     {
-        /// <summary>
-        /// Get discord avatar image.
-        /// </summary>
-        /// <param name="user">User object.</param>
-        /// <returns></returns>
         public async Task GetAvatarFromUrl(Discord.IUser user)
         {
             var fileName = $"{ user.AvatarId }.png";
@@ -26,27 +24,14 @@ namespace RandomBot.Services
                 }
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="directory"></param>
-        /// <returns></returns>
+        
         public Stream GetImageStream(string directory)
         {
             var image = Image.FromFile(directory);
             var rawFormat = this.GetImageFormat(image.RawFormat);
             return this.ToStream(image, rawFormat);
         }
-
-        /// <summary>
-        /// Manipulate image from existing template file.
-        /// </summary>
-        /// <param name="directory">Directory to template file.</param>
-        /// <param name="avatarId">User's Avatar ID.</param>
-        /// <param name="xCoor">X Coordinate for image manipulation.</param>
-        /// <param name="yCoor">Y Coordinate for image manipulation.</param>
-        /// <returns>Stream object.</returns>
+        
         public Stream ManipulateImage(string directory, string avatarId, int xCoor, int yCoor)
         {
             avatarId = avatarId ?? "NoAvatar";
@@ -64,15 +49,7 @@ namespace RandomBot.Services
                 return ToStream(image, this.GetImageFormat(image.RawFormat));
             }
         }
-
-        /// <summary>
-        /// Manipulate image from existing stream file.
-        /// </summary>
-        /// <param name="stream">MemoryStream object.</param>
-        /// <param name="avatarId">User's Avatar ID.</param>
-        /// <param name="xCoor">X Coordinate for image manipulation.</param>
-        /// <param name="yCoor">Y Coordinate for image manipulation.</param>
-        /// <returns>Stream object.</returns>
+        
         public Stream ManipulateImage(Stream stream, string avatarId, int xCoor, int yCoor)
         {
             avatarId = avatarId ?? "NoAvatar";
@@ -91,11 +68,40 @@ namespace RandomBot.Services
             }
         }
 
-        /// <summary>
-        /// Get image extension format.
-        /// </summary>
-        /// <param name="rawFormat">ImageFormat from Image object.</param>
-        /// <returns>ImageFormat.</returns>
+        public Stream WriteTextOnImage(string directory, SocketGuildUser socketGuildUser, int xCoor, int yCoor)
+        {
+            var nameToDraw = new List<string>();
+            var name = socketGuildUser.Nickname ?? socketGuildUser.Username;
+            while (name.Length > 6)
+            {
+                var partialName = name.Substring(0, 6);
+                name = name.Substring(6, name.Length - 6);
+                nameToDraw.Add($"{ partialName }-");
+            }
+            nameToDraw.Add(name);
+
+            using (var templateImage = Image.FromFile($@"Image\{ directory }.jpg"))
+            using (var imageGraphics = Graphics.FromImage(templateImage))
+            using (var font = new FontFamily("Kimmun"))
+            {
+                var stringFormat = new StringFormat
+                {
+                    Alignment = StringAlignment.Center
+                };
+
+                var graphicsPath = new GraphicsPath();
+                for (var i = 0; i < nameToDraw.Count; i++)
+                {
+                    graphicsPath.AddString(nameToDraw[i], font, (int)FontStyle.Regular, 14, new Point(xCoor, yCoor + i * 14), stringFormat);
+                }
+
+                imageGraphics.SmoothingMode = SmoothingMode.HighQuality;
+                imageGraphics.FillPath(Brushes.Black, graphicsPath);
+
+                return ToStream(templateImage, this.GetImageFormat(templateImage.RawFormat));
+            }
+        }
+
         private ImageFormat GetImageFormat(ImageFormat rawFormat)
         {
             if (rawFormat.Equals(ImageFormat.Jpeg))
@@ -119,13 +125,7 @@ namespace RandomBot.Services
             else
                 return ImageFormat.Wmf;
         }
-
-        /// <summary>
-        /// Change image format to Stream object.
-        /// </summary>
-        /// <param name="image">Image object.</param>
-        /// <param name="format">Image format.</param>
-        /// <returns>Stream object of image.</returns>
+        
         private Stream ToStream(Image image, ImageFormat format)
         {
             var stream = new MemoryStream();

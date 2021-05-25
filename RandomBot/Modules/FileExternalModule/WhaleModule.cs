@@ -4,15 +4,14 @@ using System.Threading.Tasks;
 
 namespace RandomBot.Modules.FileExternalModule
 {
-    public class GanbaruModule : ModuleBase<SocketCommandContext>
+    public class WhaleModule : ModuleBase<SocketCommandContext>
     {
-        [Command("ganbaru", RunMode = RunMode.Async)]
-        [Summary("Ganbaru Unicorn")]
-        public async Task Ganbaru()
+        [Command("whale", RunMode = RunMode.Async)]
+        public async Task Whale()
         {
             var embed = new EmbedBuilder()
                 .WithColor(Discord.Color.DarkRed)
-                .WithImageUrl("https://i2.wp.com/azurlane.info/wp-content/uploads/2017/11/Eu6JqWN.jpg");
+                .WithImageUrl("https://media.discordapp.net/attachments/465884661537570826/689061432217567255/whale.jpg");
             await ReplyAsync("", embed: embed.Build());
         }
     }
