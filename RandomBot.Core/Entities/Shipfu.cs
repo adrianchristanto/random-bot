@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RandomBot.Entities
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
+
+namespace RandomBot.Core.Entities
 {
     public partial class Shipfu
     {
@@ -12,6 +16,7 @@ namespace RandomBot.Entities
             GachaHistoryDetail = new HashSet<GachaHistoryDetail>();
         }
 
+        [Key]
         public int ShipfuId { get; set; }
         public int ShipfuRarityId { get; set; }
         [Required]
@@ -22,10 +27,10 @@ namespace RandomBot.Entities
         [Required]
         public bool? IsAvailable { get; set; }
 
-        [ForeignKey("ShipfuRarityId")]
+        [ForeignKey(nameof(ShipfuRarityId))]
         [InverseProperty("Shipfu")]
-        public ShipfuRarity ShipfuRarity { get; set; }
+        public virtual ShipfuRarity ShipfuRarity { get; set; }
         [InverseProperty("Shipfu")]
-        public ICollection<GachaHistoryDetail> GachaHistoryDetail { get; set; }
+        public virtual ICollection<GachaHistoryDetail> GachaHistoryDetail { get; set; }
     }
 }

@@ -1,14 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Discord;
 using Discord.Addons.Interactive;
 using Discord.WebSocket;
 using RandomBot.Services;
-using RandomBot.Entities;
-using Microsoft.Extensions.Configuration;
-using System.IO;
+using RandomBot.Core.Entities;
 
 namespace RandomBot
 {
@@ -23,12 +23,6 @@ namespace RandomBot
         public async Task Start()
         {
             var basePath = Directory.GetCurrentDirectory();
-
-            // On debug mode only.
-            if (basePath.Contains("netcoreapp"))
-            {
-                basePath = Path.GetFullPath(Path.Combine(basePath, @"..\..\..\"));
-            }
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(basePath.ToString())

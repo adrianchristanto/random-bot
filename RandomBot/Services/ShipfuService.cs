@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
-using RandomBot.Entities;
+using RandomBot.Core.Entities;
 using RandomBot.Models;
 using System;
 using System.Collections.Generic;
@@ -53,7 +53,9 @@ namespace RandomBot.Services
         [Summary("Get gacha history")]
         public async Task GetGachaHistory(SocketCommandContext Context)
         {
-            var gachaHistory = await this.DbContext.GachaHistory.Where(Q => Q.UserId == Context.User.Id.ToString()).FirstOrDefaultAsync();
+            var gachaHistory = await this.DbContext.GachaHistory.AsQueryable()
+                .Where(Q => Q.UserId == Context.User.Id.ToString())
+                .FirstOrDefaultAsync();
             var completionRate = await this.GetCompletionRate(Context.User.Id.ToString());
             var embed = new EmbedBuilder().WithColor(Discord.Color.DarkRed);
             if (gachaHistory == null)
@@ -62,7 +64,7 @@ namespace RandomBot.Services
             }
             else
             {
-                var entryCount = gachaHistory.NormalCount + gachaHistory.RareCount + gachaHistory.SRCount + gachaHistory.SSRCount;
+                var entryCount = gachaHistory.NormalCount + gachaHistory.RareCount + gachaHistory.SrCount + gachaHistory.SsrCount;
                 var stringDetail = @"
 {0} has pulled {1} gacha(s) of:
 {2} SSR
@@ -70,7 +72,7 @@ namespace RandomBot.Services
 {4} R
 {5} N
 {6}% Shipfu Completion Rate";
-                embed.WithDescription(string.Format(stringDetail, Context.User.Mention, entryCount, gachaHistory.SSRCount, gachaHistory.SRCount, gachaHistory.RareCount, gachaHistory.NormalCount, completionRate));
+                embed.WithDescription(string.Format(stringDetail, Context.User.Mention, entryCount, gachaHistory.SsrCount, gachaHistory.SrCount, gachaHistory.RareCount, gachaHistory.NormalCount, completionRate));
             }
             await Context.Channel.SendMessageAsync("", embed: embed.Build());
         }
@@ -78,8 +80,10 @@ namespace RandomBot.Services
         [Summary("Get gacha completion rate")]
         public async Task<int> GetCompletionRate(string userId)
         {
-            var gachaCompletion = await this.DbContext.GachaHistoryDetail.Where(Q => Q.UserId == userId).CountAsync();
-            var shipfuCount = await DbContext.Shipfu.CountAsync();
+            var gachaCompletion = await this.DbContext.GachaHistoryDetail.AsQueryable()
+                .Where(Q => Q.UserId == userId)
+                .CountAsync();
+            var shipfuCount = await this.DbContext.Shipfu.AsQueryable().CountAsync();
             var completionRate = gachaCompletion * 100 / shipfuCount;
             return completionRate;
         }
@@ -87,12 +91,13 @@ namespace RandomBot.Services
         [Summary("Get rarity model")]
         private async Task<List<ShipfuRarityModel>> GetShipfuRarity()
         {
-            return await this.DbContext.ShipfuRarity.Select(Q => new ShipfuRarityModel
-            {
-                ShipfuRarityId = Q.ShipfuRarityId,
-                ShipfuRarityName = Q.ShipfuRarityName,
-                ShipfuRarityPercentage = Q.ShipfuRarityPercentage
-            }).ToListAsync();
+            return await this.DbContext.ShipfuRarity.AsQueryable()
+                .Select(Q => new ShipfuRarityModel
+                {
+                    ShipfuRarityId = Q.ShipfuRarityId,
+                    ShipfuRarityName = Q.ShipfuRarityName,
+                    ShipfuRarityPercentage = Q.ShipfuRarityPercentage
+                }).ToListAsync();
         }
 
         [Summary("Get the rarity based on random number")]
@@ -120,7 +125,7 @@ namespace RandomBot.Services
         [Summary("Get shipfu best on rarity")]
         private async Task<List<ShipfuModel>> GetShipfuByRarity(int rarityId)
         {
-            return await this.DbContext.Shipfu
+            return await this.DbContext.Shipfu.AsQueryable()
                 .Where(Q => Q.ShipfuRarityId == rarityId && Q.IsAvailable == true)
                 .Select(Q => new ShipfuModel
                 {
@@ -136,7 +141,9 @@ namespace RandomBot.Services
         private async void ReportGacha(string userId, ShipfuModel shipfu)
         {
             // Record GachaHistory
-            var gachaHistory = await this.DbContext.GachaHistory.Where(Q => Q.UserId == userId).FirstOrDefaultAsync();
+            var gachaHistory = await this.DbContext.GachaHistory.AsQueryable()
+                .Where(Q => Q.UserId == userId)
+                .FirstOrDefaultAsync();
             if (gachaHistory == null)
             {
                 var newGachaHistory = new GachaHistory
@@ -144,8 +151,8 @@ namespace RandomBot.Services
                     UserId = userId,
                     NormalCount = shipfu.ShipfuRarity == 1 ? 1 : 0,
                     RareCount = shipfu.ShipfuRarity == 2 ? 1 : 0,
-                    SRCount = shipfu.ShipfuRarity == 3 ? 1 : 0,
-                    SSRCount = shipfu.ShipfuRarity == 4 ? 1 : 0
+                    SrCount = shipfu.ShipfuRarity == 3 ? 1 : 0,
+                    SsrCount = shipfu.ShipfuRarity == 4 ? 1 : 0
                 };
                 this.DbContext.GachaHistory.Add(newGachaHistory);
             }
@@ -153,13 +160,13 @@ namespace RandomBot.Services
             {
                 gachaHistory.NormalCount = shipfu.ShipfuRarity == 1 ? gachaHistory.NormalCount + 1 : gachaHistory.NormalCount;
                 gachaHistory.RareCount = shipfu.ShipfuRarity == 2 ? gachaHistory.RareCount + 1 : gachaHistory.RareCount;
-                gachaHistory.SRCount = shipfu.ShipfuRarity == 3 ? gachaHistory.SRCount + 1 : gachaHistory.SRCount;
-                gachaHistory.SSRCount = shipfu.ShipfuRarity == 4 ? gachaHistory.SSRCount + 1 : gachaHistory.SSRCount;
+                gachaHistory.SrCount = shipfu.ShipfuRarity == 3 ? gachaHistory.SrCount + 1 : gachaHistory.SrCount;
+                gachaHistory.SsrCount = shipfu.ShipfuRarity == 4 ? gachaHistory.SsrCount + 1 : gachaHistory.SsrCount;
                 this.DbContext.GachaHistory.Update(gachaHistory);
             }
 
             // Record GachaHistoryDetail
-            var gachaHistoryDetail = await this.DbContext.GachaHistoryDetail
+            var gachaHistoryDetail = await this.DbContext.GachaHistoryDetail.AsQueryable()
                 .Where(Q => Q.UserId == userId && Q.ShipfuId == shipfu.ShipfuId)
                 .FirstOrDefaultAsync();
             if (gachaHistoryDetail == null)

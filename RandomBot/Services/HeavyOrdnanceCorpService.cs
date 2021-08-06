@@ -1,6 +1,6 @@
 ﻿using Discord;
 using Microsoft.EntityFrameworkCore;
-using RandomBot.Entities;
+using RandomBot.Core.Entities;
 using RandomBot.Models;
 using System;
 using System.Collections.Generic;
@@ -56,24 +56,23 @@ namespace RandomBot.Services
 
         private async Task<List<HocModel>> GetHocModel(string hocName)
         {
-            var hocs = await
-                (from h in this.DbContext.HeavyOrdnanceCorp
-                 where h.Name.Contains(hocName)
-                 select new HocModel
-                 {
-                     Name = h.Name,
-                     Chip = h.Chip,
-                     Lethality = h.Lethality,
-                     Pierce = h.Pierce,
-                     Precision = h.Precision,
-                     Reload = h.Reload,
-                     Range = h.Range,
-                     NormalAttack = h.NormalAttack,
-                     Skill1 = h.Skill1,
-                     Skill2 = h.Skill2,
-                     Skill3 = h.Skill3
+            var hocs = await this.DbContext.HeavyOrdnanceCorp.AsQueryable()
+                .AsNoTracking()
+                .Where(Q => EF.Functions.Like(Q.Name, $"%{hocName}%"))
+                .Select(Q => new HocModel
+                {
+                    Name = Q.Name,
+                    Chip = Q.Chip,
+                    Lethality = Q.Lethality,
+                    Pierce = Q.Pierce,
+                    Precision = Q.Precision,
+                    Reload = Q.Reload,
+                    Range = Q.Range,
+                    NormalAttack = Q.NormalAttack,
+                    Skill1 = Q.Skill1,
+                    Skill2 = Q.Skill2,
+                    Skill3 = Q.Skill3
                  })
-                 .AsNoTracking()
                  .ToListAsync();
 
             return hocs;

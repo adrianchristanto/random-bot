@@ -2,7 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace RandomBot.Entities
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
+
+namespace RandomBot.Core.Entities
 {
     public partial class RandomBotDbContext : DbContext
     {
@@ -17,7 +21,7 @@ namespace RandomBot.Entities
         public virtual DbSet<ReminderRecipient> ReminderRecipient { get; set; }
         public virtual DbSet<Shipfu> Shipfu { get; set; }
         public virtual DbSet<ShipfuRarity> ShipfuRarity { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Doll>(entity =>
@@ -36,9 +40,9 @@ namespace RandomBot.Entities
 
                 entity.Property(e => e.Evasion).IsUnicode(false);
 
-                entity.Property(e => e.HP).IsUnicode(false);
+                entity.Property(e => e.Hp).IsUnicode(false);
 
-                entity.Property(e => e.ROF).IsUnicode(false);
+                entity.Property(e => e.Rof).IsUnicode(false);
 
                 entity.Property(e => e.Skill1).IsUnicode(false);
 
@@ -59,18 +63,14 @@ namespace RandomBot.Entities
 
             modelBuilder.Entity<DollType>(entity =>
             {
-                entity.Property(e => e.DollTypeCode)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
+                entity.Property(e => e.DollTypeCode).IsUnicode(false);
 
                 entity.Property(e => e.DollTypeName).IsUnicode(false);
             });
 
             modelBuilder.Entity<GachaHistory>(entity =>
             {
-                entity.Property(e => e.UserId)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
+                entity.Property(e => e.UserId).IsUnicode(false);
             });
 
             modelBuilder.Entity<GachaHistoryDetail>(entity =>
@@ -92,6 +92,9 @@ namespace RandomBot.Entities
 
             modelBuilder.Entity<HeavyOrdnanceCorp>(entity =>
             {
+                entity.HasKey(e => e.HocId)
+                    .HasName("PK__HeavyOrd__2BB09C329122BDC8");
+
                 entity.Property(e => e.HocId).ValueGeneratedNever();
 
                 entity.Property(e => e.Chip).IsUnicode(false);

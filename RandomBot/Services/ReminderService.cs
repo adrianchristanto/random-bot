@@ -2,7 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using RandomBot.Entities;
+using RandomBot.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,6 @@ namespace RandomBot.Services
         public void Dispose()
         {
             this.Client.Dispose();
-            this.DbContext.Dispose();
         }
 
         public SocketTextChannel GetSocketTextChannel(ulong guildId, ulong channelId)
@@ -143,7 +142,7 @@ namespace RandomBot.Services
         public async Task SetDailyReminder(SocketCommandContext context, string guid)
         {
             var reminderId = new Guid(guid);
-            var reminder = await this.DbContext.Reminder
+            var reminder = await this.DbContext.Reminder.AsQueryable()
                 .Where(Q => Q.ReminderId == reminderId && Q.IsActive == true)
                 .FirstOrDefaultAsync();
 
@@ -161,7 +160,7 @@ namespace RandomBot.Services
 
         public async Task ShowReminder(SocketCommandContext context, bool showAll = false)
         {
-            var openReminder = await this.DbContext.Reminder
+            var openReminder = await this.DbContext.Reminder.AsQueryable()
                 .Join(this.DbContext.ReminderRecipient, r => r.ReminderRecipientId, rr => rr.ReminderRecipientId, (r, rr) => new
                 {
                     r,
@@ -200,12 +199,13 @@ namespace RandomBot.Services
             var dateNow = DateTime.Now;
 
             // Get reminder grouped by recipients.
-            var reminderDictionary = await (from r in this.DbContext.Reminder
-                                            join rr in this.DbContext.ReminderRecipient on r.ReminderRecipientId equals rr.ReminderRecipientId
-                                            where r.ReminderDateTime <= dateNow && r.IsActive == true
-                                            group r by new { rr.GuildId, rr.ChannelId } into gr
-                                            select gr)
-                                            .ToDictionaryAsync(Q => (Q.Key.GuildId, Q.Key.ChannelId), Q => Q.ToList());
+            var rawReminders = await this.DbContext.Reminder.AsQueryable()
+                .Where(Q => Q.ReminderDateTime <= dateNow && Q.IsActive)
+                .Include(Q => Q.ReminderRecipient)
+                .ToListAsync();
+            var reminderDictionary = rawReminders
+                .GroupBy(Q => new { Q.ReminderRecipient.GuildId, Q.ReminderRecipient.ChannelId })
+                .ToDictionary(Q => (Q.Key.GuildId, Q.Key.ChannelId), Q => Q.ToList());
 
             var remindersToUpdate = new List<Reminder>();
             var reminderMessage = new Dictionary<SocketTextChannel, EmbedBuilder>();
@@ -269,7 +269,7 @@ namespace RandomBot.Services
         public async Task RemoveReminder(SocketCommandContext context, string guid)
         {
             var reminderId = new Guid(guid);
-            var openReminder = await this.DbContext.Reminder
+            var openReminder = await this.DbContext.Reminder.AsQueryable()
                 .Where(Q => Q.ReminderId == reminderId && Q.IsActive == true)
                 .FirstOrDefaultAsync();
 

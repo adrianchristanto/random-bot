@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RandomBot.Entities
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
+
+namespace RandomBot.Core.Entities
 {
     public partial class Doll
     {
+        [Key]
         public Guid DollId { get; set; }
         [Required]
         [StringLength(100)]
@@ -15,8 +20,9 @@ namespace RandomBot.Entities
         [StringLength(3)]
         public string DollTypeCode { get; set; }
         [Required]
+        [Column("HP")]
         [StringLength(12)]
-        public string HP { get; set; }
+        public string Hp { get; set; }
         [Required]
         [StringLength(12)]
         public string Damage { get; set; }
@@ -27,8 +33,9 @@ namespace RandomBot.Entities
         [StringLength(12)]
         public string Evasion { get; set; }
         [Required]
+        [Column("ROF")]
         [StringLength(12)]
-        public string ROF { get; set; }
+        public string Rof { get; set; }
         [Required]
         [StringLength(12)]
         public string Armor { get; set; }
@@ -50,8 +57,8 @@ namespace RandomBot.Entities
         [StringLength(255)]
         public string TileEffect { get; set; }
 
-        [ForeignKey("DollTypeCode")]
-        [InverseProperty("Doll")]
-        public DollType DollTypeCodeNavigation { get; set; }
+        [ForeignKey(nameof(DollTypeCode))]
+        [InverseProperty(nameof(DollType.Doll))]
+        public virtual DollType DollTypeCodeNavigation { get; set; }
     }
 }
