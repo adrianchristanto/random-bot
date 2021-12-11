@@ -45,16 +45,17 @@ namespace RandomBot.Services
             }
             else
             {
-                var recipientId = await this.GetReminderRecipientId(context);
+                var recipient = await this.GetReminderRecipient(context);
 
                 var reminder = new Reminder
                 {
                     ReminderId = Guid.NewGuid(),
-                    ReminderRecipientId = recipientId,
+                    ReminderRecipient = recipient,
                     ReminderDateTime = ReminderDate,
                     ReminderMessage = ReminderMessage,
                     IsActive = true
                 };
+                
                 this.DbContext.Reminder.Add(reminder);
                 await this.DbContext.SaveChangesAsync();
 
@@ -119,7 +120,7 @@ namespace RandomBot.Services
             return (reminderMessage, reminderDate, isValid);
         }
 
-        private async Task<int> GetReminderRecipientId(SocketCommandContext context)
+        private async Task<ReminderRecipient> GetReminderRecipient(SocketCommandContext context)
         {
             var recipient = await this.DbContext.ReminderRecipient.AsNoTracking()
                 .Where(Q => Q.GuildId == context.Guild.Id.ToString() && Q.ChannelId == context.Channel.Id.ToString())
@@ -136,7 +137,7 @@ namespace RandomBot.Services
                 this.DbContext.ReminderRecipient.Add(recipient);
             }
 
-            return recipient.ReminderRecipientId;
+            return recipient;
         }
 
         public async Task SetDailyReminder(SocketCommandContext context, string guid)
