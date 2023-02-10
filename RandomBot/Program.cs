@@ -24,22 +24,47 @@ namespace RandomBot
         {
             var basePath = Directory.GetCurrentDirectory();
 
-            var builder = new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .SetBasePath(basePath.ToString())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            Configuration = builder.Build();
+                .AddJsonFile("appsettings.json")
+                .AddUserSecrets<Program>(optional: true)
+                .Build();
 
             var token = Configuration.GetSection("Token").Value;
 
-            Client = new DiscordSocketClient();
+            var discordConfig = ConfigureDiscordSocket();
+
+            Client = new DiscordSocketClient(discordConfig);
             Services = this.ConfigureServices();
-            await this.Services.GetRequiredService<CommandHandler>().InstallCommands(Configuration);
+            await this.Services.GetRequiredService<CommandHandler>().InstallCommandsAsync(Configuration);
 
             await Client.LoginAsync(TokenType.Bot, token);
             await Client.StartAsync();
             await Client.SetGameAsync("$help");
 
             await Task.Delay(-1);
+        }
+
+        private DiscordSocketConfig ConfigureDiscordSocket()
+        {
+            return new DiscordSocketConfig()
+            {
+                GatewayIntents = 
+                    GatewayIntents.Guilds |
+                    GatewayIntents.GuildMembers |
+                    GatewayIntents.GuildBans | 
+                    GatewayIntents.GuildEmojis |
+                    GatewayIntents.GuildIntegrations |
+                    GatewayIntents.GuildWebhooks |
+                    GatewayIntents.GuildVoiceStates |
+                    GatewayIntents.GuildMessages |
+                    GatewayIntents.GuildMessageReactions |
+                    GatewayIntents.GuildMessageTyping |
+                    GatewayIntents.DirectMessages |
+                    GatewayIntents.DirectMessageReactions |
+                    GatewayIntents.DirectMessageTyping |
+                    GatewayIntents.MessageContent
+            };
         }
 
         private IServiceProvider ConfigureServices()

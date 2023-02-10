@@ -27,7 +27,7 @@ namespace RandomBot
             Services = services;
         }
 
-        public async Task InstallCommands(IConfigurationRoot configuration)
+        public async Task InstallCommandsAsync(IConfigurationRoot configuration)
         {
             Configuration = configuration;
 
@@ -38,7 +38,7 @@ namespace RandomBot
             Timer.Elapsed += new ElapsedEventHandler(ElapsedHandlerAsync);
             Timer.Enabled = true;
 
-            Client.MessageReceived += HandleCommand;
+            Client.MessageReceived += HandleCommandAsync;
             await Commands.AddModulesAsync(Assembly.GetEntryAssembly(), Services);
         }
 
@@ -82,7 +82,7 @@ namespace RandomBot
             this.Timer.Interval = this.SetInitialInterval(interval);
         }
 
-        private async Task HandleCommand(SocketMessage msgParam)
+        private async Task HandleCommandAsync(SocketMessage msgParam)
         {
             var prefix = '$';
             var argPos = 0;
