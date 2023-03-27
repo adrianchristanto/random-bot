@@ -221,7 +221,7 @@ namespace RandomBot.Services
                 for (var i = 0; i < reminders.Count; i++)
                 {
                     var minuteDifference = (dateNow - reminders[i].ReminderDateTime).TotalMinutes;
-                    if (minuteDifference <= 90)
+                    if (minuteDifference <= 15)
                     {
                         reminderCount++;
                         var reminderDate = reminders[i].IsDaily == true ? reminders[i].ReminderDateTime.ToShortTimeString() : reminders[i].ReminderDateTime.ToString("dd/MM/yyyy HH:mm");
