@@ -1,14 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Discord;
 using Discord.Addons.Interactive;
 using Discord.WebSocket;
 using RandomBot.Services;
-using RandomBot.Entities;
-using Microsoft.Extensions.Configuration;
-using System.IO;
+using RandomBot.Core.Entities;
 
 namespace RandomBot
 {
@@ -24,28 +24,47 @@ namespace RandomBot
         {
             var basePath = Directory.GetCurrentDirectory();
 
-            // On debug mode only.
-            if (basePath.Contains("netcoreapp"))
-            {
-                basePath = Path.GetFullPath(Path.Combine(basePath, @"..\..\..\"));
-            }
-
-            var builder = new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .SetBasePath(basePath.ToString())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            Configuration = builder.Build();
+                .AddJsonFile("appsettings.json")
+                .AddUserSecrets<Program>(optional: true)
+                .Build();
 
             var token = Configuration.GetSection("Token").Value;
 
-            Client = new DiscordSocketClient();
+            var discordConfig = ConfigureDiscordSocket();
+
+            Client = new DiscordSocketClient(discordConfig);
             Services = this.ConfigureServices();
-            await this.Services.GetRequiredService<CommandHandler>().InstallCommands(Configuration);
+            await this.Services.GetRequiredService<CommandHandler>().InstallCommandsAsync(Configuration);
 
             await Client.LoginAsync(TokenType.Bot, token);
             await Client.StartAsync();
             await Client.SetGameAsync("$help");
 
             await Task.Delay(-1);
+        }
+
+        private DiscordSocketConfig ConfigureDiscordSocket()
+        {
+            return new DiscordSocketConfig()
+            {
+                GatewayIntents = 
+                    GatewayIntents.Guilds |
+                    GatewayIntents.GuildMembers |
+                    GatewayIntents.GuildBans | 
+                    GatewayIntents.GuildEmojis |
+                    GatewayIntents.GuildIntegrations |
+                    GatewayIntents.GuildWebhooks |
+                    GatewayIntents.GuildVoiceStates |
+                    GatewayIntents.GuildMessages |
+                    GatewayIntents.GuildMessageReactions |
+                    GatewayIntents.GuildMessageTyping |
+                    GatewayIntents.DirectMessages |
+                    GatewayIntents.DirectMessageReactions |
+                    GatewayIntents.DirectMessageTyping |
+                    GatewayIntents.MessageContent
+            };
         }
 
         private IServiceProvider ConfigureServices()

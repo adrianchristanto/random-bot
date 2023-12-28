@@ -1,3 +1,7 @@
+## 0.5.0
+- Upgrade framework to .NET 8.0
+- Upgrade Discord.Net packages
+
 ## 0.4.1
 - Added $bn command
 - Added $cu command
@@ -26,7 +30,7 @@
 
 ## 0.3.5
 
-- Improved Reminder Module speed decreasing the ammount of database connection
+- Improved Reminder Module speed by decreasing the ammount of database connection
 - Improved Reminder Module saving method to prevent data not updated resulting in multiple reminders
 - Change Gunfu's ROF calculation from 30 FPS to 60 FPS cap
 
@@ -103,12 +107,8 @@
 - Added $facepalm and $soon command
 - Changed emote for $uralreadydead command as the emote is no longer available
 
-## 0.1.2b
-
-- Added $gocrazy command
-
 ## 0.1.2
-
+- Added $gocrazy command
 - Image is now smaller for faster process and upload
 - Added "Panda REEE" and "bitch" meme
 - $delete command now can only be used by server owner

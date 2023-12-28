@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RandomBot.Entities
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
+
+namespace RandomBot.Core.Entities
 {
     public partial class ReminderRecipient
     {
@@ -12,6 +16,7 @@ namespace RandomBot.Entities
             Reminder = new HashSet<Reminder>();
         }
 
+        [Key]
         public int ReminderRecipientId { get; set; }
         [Required]
         [StringLength(20)]
@@ -21,6 +26,6 @@ namespace RandomBot.Entities
         public string ChannelId { get; set; }
 
         [InverseProperty("ReminderRecipient")]
-        public ICollection<Reminder> Reminder { get; set; }
+        public virtual ICollection<Reminder> Reminder { get; set; }
     }
 }

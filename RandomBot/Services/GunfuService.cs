@@ -1,6 +1,6 @@
 ﻿using Discord;
 using Microsoft.EntityFrameworkCore;
-using RandomBot.Entities;
+using RandomBot.Core.Entities;
 using RandomBot.Models;
 using System;
 using System.Collections.Generic;
@@ -60,17 +60,17 @@ namespace RandomBot.Services
         private async Task<List<DollModel>> GetDollModel(string dollName)
         {
             var doll = await
-                (from d in this.DbContext.Doll
+                (from d in this.DbContext.Doll.AsQueryable()
                  where d.DollName.Contains(dollName)
                  select new DollModel
                  {
                      DollName = d.DollName,
                      DollTypeName = d.DollTypeCode,
-                     HP = d.HP,
+                     HP = d.Hp,
                      Damage = d.Damage,
                      Accuracy = d.Accuracy,
                      Evasion = d.Evasion,
-                     ROF = d.ROF,
+                     ROF = d.Rof,
                      Armor = d.Armor,
                      ClipSize = d.ClipSize,
                      Skill1 = d.Skill1,
