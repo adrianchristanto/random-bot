@@ -5,8 +5,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RandomBot.Services
 {
@@ -15,12 +16,22 @@ namespace RandomBot.Services
         public async Task GetAvatarFromUrl(Discord.IUser user)
         {
             var fileName = $"{ user.AvatarId }.png";
-            if (File.Exists($@"Image\AvatarTemplate\{ fileName }") == false && string.IsNullOrEmpty(user.AvatarId) == false)
+            if (!File.Exists($@"Image\AvatarTemplate\{ fileName }") && !string.IsNullOrEmpty(user.AvatarId))
             {
-                var userImage = new Uri(user.GetAvatarUrl());
-                using (var client = new WebClient())
+                var imageUri = new Uri(user.GetAvatarUrl());
+                var encodedImageUri = HttpUtility.UrlEncode(imageUri.ToString());
+                using (var client = new HttpClient())
                 {
-                    await client.DownloadFileTaskAsync(userImage, $@"Image\AvatarTemplate\{ fileName }");
+                    // Read user image.
+                    var response = await client.GetAsync(encodedImageUri);
+
+                    // Save user image.
+                    using (var fileStream = new FileStream(
+                        $@"Image\AvatarTemplate\{ fileName }.pdf", 
+                        FileMode.CreateNew))
+                    {
+                        await response.Content.CopyToAsync(fileStream);
+                    }
                 }
             }
         }

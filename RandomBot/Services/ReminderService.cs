@@ -50,12 +50,11 @@ namespace RandomBot.Services
                 var reminder = new Reminder
                 {
                     ReminderId = Guid.NewGuid(),
-                    ReminderRecipient = recipient,
+                    ReminderRecipientId = recipient.ReminderRecipientId,
                     ReminderDateTime = ReminderDate,
                     ReminderMessage = ReminderMessage,
                     IsActive = true
                 };
-                
                 this.DbContext.Reminder.Add(reminder);
                 await this.DbContext.SaveChangesAsync();
 
