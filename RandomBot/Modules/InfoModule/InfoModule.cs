@@ -62,7 +62,7 @@ Call him if you want to give some feedback
         public async Task ChangeLog()
         {
             await Context.Channel.SendMessageAsync(@"
-https://gitlab.com/adrianch/RandomBot/blob/master/CHANGELOG.md 
+https://github.com/adrianchristanto/random-bot/blob/main/CHANGELOG.md 
 Why are you looking for this?", true);
         }
 
