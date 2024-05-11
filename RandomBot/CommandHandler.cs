@@ -74,7 +74,7 @@ namespace RandomBot
             return 60000 - currentSecond;
         }
 
-        private async void ElapsedHandlerAsync(object source, System.Timers.ElapsedEventArgs e)
+        private async void ElapsedHandlerAsync(object source, ElapsedEventArgs e)
         {
             await this.Services.GetRequiredService<ReminderService>().ExecuteReminder();
 

@@ -19,15 +19,15 @@ namespace RandomBot.Services
             if (!File.Exists($@"Image\AvatarTemplate\{ fileName }") && !string.IsNullOrEmpty(user.AvatarId))
             {
                 var imageUri = new Uri(user.GetAvatarUrl());
-                var encodedImageUri = HttpUtility.UrlEncode(imageUri.ToString());
+                //var encodedImageUri = HttpUtility.UrlEncode(imageUri.ToString());
                 using (var client = new HttpClient())
                 {
                     // Read user image.
-                    var response = await client.GetAsync(encodedImageUri);
+                    var response = await client.GetAsync(imageUri);
 
                     // Save user image.
                     using (var fileStream = new FileStream(
-                        $@"Image\AvatarTemplate\{ fileName }.pdf", 
+                        $@"Image\AvatarTemplate\{ fileName }", 
                         FileMode.CreateNew))
                     {
                         await response.Content.CopyToAsync(fileStream);

@@ -12,7 +12,7 @@ namespace RandomBot.Modules.HelloModule
         [Summary("Says basic hello")]
         public async Task Hello()
         {
-            await ReplyAsync($"Hello { Context.Message.Author.Mention } <:AkariWave:494025661472833536>");
+            await ReplyAsync($"Hello { Context.Message.Author.Mention } <:kyouka:1187613200993239040>");
         }
         [Command(RunMode = RunMode.Async)]
         [Summary("Says basic hello to another user")]
@@ -25,7 +25,7 @@ namespace RandomBot.Modules.HelloModule
             }
             else
             {
-                await ReplyAsync($"{ Context.User.Mention } says hello to you, { user.Mention } <:AkariWave:494025661472833536>");
+                await ReplyAsync($"{ Context.User.Mention } says hello to you, { user.Mention } <:kyouka:1187613200993239040>");
             }
             await messagesToDelete.DeleteAsync();
         }

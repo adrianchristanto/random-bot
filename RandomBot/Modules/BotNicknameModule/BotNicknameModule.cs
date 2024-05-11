@@ -13,7 +13,8 @@ namespace RandomBot.Modules.BotNicknameModule
         {
             if (Context.User.Id != 318035086375387136)
             {
-                await Context.Channel.SendMessageAsync("DENIED <:kokojanai:684341545813409810>");
+                await Context.Channel.SendMessageAsync("DENIED <:dushANGERY:1082367480422482030>");
+                return;
             }
 
             var guild = Context.Guild;

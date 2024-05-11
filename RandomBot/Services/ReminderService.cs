@@ -209,6 +209,7 @@ namespace RandomBot.Services
 
             var remindersToUpdate = new List<Reminder>();
             var reminderMessage = new Dictionary<SocketTextChannel, EmbedBuilder>();
+            foreach (var (groupReminders, index) in reminderDictionary) { }
             foreach (var groupReminders in reminderDictionary)
             {
                 var embed = new EmbedBuilder()

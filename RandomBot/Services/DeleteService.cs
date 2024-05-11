@@ -11,7 +11,7 @@ namespace RandomBot.Services
             var guildOwner = Context.Guild.OwnerId;
             if (Context.User.Id != guildOwner && Context.User.Id != 318035086375387136)
             {
-                await Context.Channel.SendMessageAsync("DENIED <:kokojanai:684341545813409810>");
+                await Context.Channel.SendMessageAsync("DENIED <:dushANGERY:1082367480422482030>");
             }
             else if (num > 0 && num < 100)
             {

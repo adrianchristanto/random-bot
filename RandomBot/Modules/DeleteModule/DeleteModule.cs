@@ -25,7 +25,7 @@ namespace RandomBot.Modules.DeleteModule
         {
             if (Context.User.Id != 318035086375387136)
             {
-                await Context.Channel.SendMessageAsync("DENIED <:kokojanai:684341545813409810>");
+                await Context.Channel.SendMessageAsync("DENIED <:dushANGERY:1082367480422482030>");
             }
 
             await this.DeleteService.CleanUpMessages(Context, messageId);
